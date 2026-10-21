@@ -1,0 +1,3170 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>五百年的守候</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+/* Layout: one full-bleed 3D stage. The interface floats on it as slips of paper at the edges,
+   and every chapter opens on a vertical calligraphy card stamped with a red seal (the tung blossom's heart). */
+:root {
+  color-scheme: light;
+  --ink: #1b2624;          /* 墨：帶綠的深墨色 */
+  --ink-2: #4a5955;
+  --ink-3: #7b8985;
+  --paper: #f4f7f2;        /* 桐花白，微帶葉綠 */
+  --paper-2: #e6ede6;
+  --card: #fbfcf9;
+  --glass: rgba(244, 247, 242, 0.92);
+  --rule: rgba(27, 38, 36, 0.15);
+  --tung: #a8334e;         /* 油桐花心的紅：唯一的強調色 */
+  --tung-2: #c9566f;
+  --tung-soft: #f5e2e6;
+  --leaf: #2d5a49;
+  --leaf-soft: #dde9e1;
+  --gold: #b5863a;         /* 佛前的金，只在提示與光圈出現 */
+  --gold-soft: #f3e6c9;
+  --night: #0e1615;
+  --night-glass: rgba(12, 19, 18, 0.86);
+  --on-night: #eef2ec;
+  --on-night-2: #b9c5c0;
+  --font-display: "LXGW WenKai TC", "Kaiti TC", "BiauKai", "DFKai-SB", "Noto Serif CJK TC", "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  --font-ui: "Noto Sans TC", "PingFang TC", "Heiti TC", "Microsoft JhengHei", "Noto Sans CJK TC", sans-serif;
+  --gx-l: max(16px, env(safe-area-inset-left, 0px));
+  --gx-r: max(16px, env(safe-area-inset-right, 0px));
+  --gy-t: calc(env(safe-area-inset-top, 0px) + 12px);
+  --gy-b: calc(env(safe-area-inset-bottom, 0px) + 14px);
+  --shadow: 0 14px 36px rgba(12, 19, 18, 0.24), 0 2px 6px rgba(12, 19, 18, 0.12);
+}
+[hidden] { display: none !important; }
+html { height: 100%; font-size: clamp(15px, 11px + 0.55vw, 19px); }
+body {
+  height: 100%; overflow: hidden; background: var(--night); color: var(--ink); -webkit-user-select: none; user-select: none;
+  font-family: var(--font-ui); -webkit-tap-highlight-color: transparent; overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+}
+button { font-family: inherit; }
+button:focus-visible, input:focus-visible, textarea:focus-visible, .card:focus-visible, .opt:focus-visible {
+  outline: 3px solid var(--gold); outline-offset: 2px;
+}
+
+/* ---------- 3D stage ---------- */
+#stage { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; outline: none; transition: filter 2.8s ease; }
+#stage.grey { filter: saturate(0.14) brightness(0.92) contrast(0.96); }
+
+/* ---------- effect layer (follows 3D points) ---------- */
+#fx { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 5; }
+.edge-arrow {
+  position: absolute; left: 0; top: 0; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--glass); color: var(--gold); box-shadow: 0 4px 14px rgba(12,19,18,.25);
+  border: 1.5px solid var(--gold);
+}
+.edge-arrow svg { width: 24px; height: 24px; }
+.hold-ring { position: absolute; left: 0; top: 0; width: 104px; height: 104px; margin: -52px 0 0 -52px; }
+.hold-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+.hold-ring circle { fill: none; stroke-width: 7; }
+.r-track { stroke: rgba(244, 247, 242, 0.55); }
+.r-zone { stroke: var(--gold); stroke-width: 11 !important; opacity: .9; }
+.r-prog { stroke: var(--paper); stroke-linecap: round; filter: drop-shadow(0 0 3px rgba(0,0,0,.35)); }
+.hold-ring.in .r-prog { stroke: var(--tung); }
+.float {
+  position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); max-width: min(84vw, 24rem); text-align: center; line-height: 1.5;
+  font-family: var(--font-display); font-size: 1.08rem; color: var(--ink); background: var(--glass);
+  padding: 6px 14px; border-radius: 999px; box-shadow: 0 6px 18px rgba(12,19,18,.2);
+}
+.float.warn { color: var(--tung); }
+.shard { position: absolute; left: 0; top: 0; width: 18px; height: 18px; margin: -9px 0 0 -9px; }
+.shard svg { width: 100%; height: 100%; overflow: visible; }
+
+/* ---------- full-screen overlays used by single chapters ---------- */
+.vignette {
+  position: fixed; inset: 0; z-index: 6; pointer-events: none;
+  -webkit-backdrop-filter: blur(7px) saturate(.7); backdrop-filter: blur(7px) saturate(.7);
+  -webkit-mask-image: radial-gradient(ellipse 34% 30% at 50% 58%, transparent 55%, #000 100%);
+  mask-image: radial-gradient(ellipse 34% 30% at 50% 58%, transparent 55%, #000 100%);
+  background: radial-gradient(ellipse 60% 55% at 50% 58%, transparent 50%, rgba(12,19,18,.35) 100%);
+}
+.train-window { position: fixed; inset: 0; z-index: 6; pointer-events: none; overflow: hidden; }
+.train-window::before {
+  content: ""; position: absolute; inset: 9% 7% 12% 7%; border-radius: clamp(18px, 4vw, 44px);
+  box-shadow: 0 0 0 100vmax #262b2f, inset 0 0 0 6px #3b4146, inset 0 0 40px rgba(0,0,0,.35);
+}
+.train-window::after {
+  content: ""; position: absolute; inset: 9% 7% 12% 7%; border-radius: clamp(18px, 4vw, 44px);
+  background: linear-gradient(115deg, rgba(255,255,255,.10) 0 18%, transparent 18% 60%, rgba(255,255,255,.06) 60% 64%, transparent 64%);
+}
+.thought {
+  position: fixed; z-index: 6; right: var(--gx-r); top: calc(var(--gy-t) + 96px); width: min(15rem, 46vw);
+  padding: 12px 14px; display: grid; gap: 6px; justify-items: center; text-align: center; pointer-events: none;
+  border-radius: 22px;
+}
+.thought svg { width: 100%; height: auto; max-height: 9rem; }
+.thought p { margin: 0; font-family: var(--font-display); font-size: 1rem; color: var(--ink-2); }
+
+/* ---------- interface layer ---------- */
+#ui {
+  position: fixed; inset: 0; z-index: 10; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 10px;
+  padding-left: var(--gx-l); padding-right: var(--gx-r); padding-block: var(--gy-t) var(--gy-b);
+  pointer-events: none;
+}
+#ui button, #ui .caption, #ui input { pointer-events: auto; }
+.slip {
+  background: var(--glass); border: 1px solid var(--rule); border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(12, 19, 18, 0.14);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+}
+.hud { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: start; gap: 10px; min-width: 0; }
+.hud-left { grid-column: 1; grid-row: 1; display: flex; flex-direction: column; gap: 6px; align-items: flex-start; min-width: 0; }
+.hud-stage { font-family: var(--font-display); font-size: 1.12rem; padding: 5px 14px; }
+.hud-ref { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; font-size: .78rem; letter-spacing: .06em; color: var(--ink-2); }
+.hud-ref svg { width: 15px; height: 15px; flex: none; }
+.hud-center { grid-column: 2; grid-row: 1; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.meter { display: flex; align-items: center; gap: 10px; padding: 7px 12px; font-size: .78rem; letter-spacing: .08em; color: var(--ink-2); }
+.meter-bar { position: relative; width: clamp(84px, 13vw, 160px); height: 8px; border-radius: 4px; background: var(--paper-2); overflow: hidden; }
+.meter-bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 0%; border-radius: 4px; background: linear-gradient(90deg, var(--gold), var(--tung-2)); transition: width .6s ease; }
+.meter-bar svg { position: absolute; inset: -2px 0; width: 100%; height: calc(100% + 4px); opacity: 0; transition: opacity .4s; }
+.meter.cracked .meter-bar svg { opacity: 1; }
+.meter.cracked { color: var(--tung); }
+.counter { padding: 6px 12px; font-size: .85rem; color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.counter b { font-size: 1.06rem; color: var(--tung); font-weight: 700; }
+.hud-right { grid-column: 3; grid-row: 1; justify-self: end; display: flex; gap: 8px; }
+@media (max-width: 760px) {
+  .hud { grid-template-columns: minmax(0, 1fr) auto; }
+  .hud-right { grid-column: 2; }
+  .hud-center { grid-column: 1 / span 2; grid-row: 2; justify-content: flex-start; }
+}
+.icon-btn {
+  width: 44px; height: 44px; display: grid; place-items: center; border-radius: 12px; cursor: pointer;
+  border: 1px solid var(--rule); background: var(--glass); color: var(--ink);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+}
+.icon-btn svg { width: 22px; height: 22px; }
+
+.mid { display: grid; justify-items: center; align-content: start; gap: 10px; min-height: 0; }
+.hint { max-width: min(34rem, 100%); padding: 8px 16px; border-radius: 999px; font-size: .92rem; line-height: 1.5; text-align: center; }
+.hearts { display: grid; justify-items: center; gap: 2px; }
+.hearts svg { width: clamp(70px, 10vw, 104px); height: auto; overflow: visible; filter: drop-shadow(0 4px 12px rgba(0,0,0,.25)); }
+.hearts span { font-size: .8rem; color: var(--on-night); letter-spacing: .1em; text-shadow: 0 1px 6px rgba(0,0,0,.6); font-variant-numeric: tabular-nums; }
+.hearts.whole svg { animation: beat 1.1s ease-in-out 2; }
+@keyframes beat { 0%, 100% { transform: scale(1); } 30% { transform: scale(1.14); } 55% { transform: scale(.98); } }
+
+.bottom { display: flex; flex-direction: column; gap: 10px; align-items: center; min-width: 0; }
+.caption {
+  width: 100%; max-width: 44rem; padding: 12px 18px 10px; display: grid; gap: 4px; cursor: pointer;
+  border-radius: 14px;
+}
+.caption-who { font-size: .72rem; letter-spacing: .16em; color: var(--tung); font-weight: 700; }
+.caption-text { margin: 0; font-family: var(--font-display); font-size: clamp(1.12rem, .95rem + .6vw, 1.5rem); line-height: 1.6; min-height: 1.6em; text-wrap: pretty; }
+.caption-next {
+  justify-self: end; display: inline-flex; align-items: center; gap: 6px; padding: 6px 4px 2px 10px; min-height: 36px;
+  border: 0; background: none; color: var(--ink-2); font-size: .82rem; letter-spacing: .1em; cursor: pointer;
+}
+.caption-next::after { content: ""; width: 0; height: 0; border-left: 7px solid var(--tung); border-top: 5px solid transparent; border-bottom: 5px solid transparent; animation: nudge 1.4s ease-in-out infinite; }
+@keyframes nudge { 50% { transform: translateX(3px); } }
+.controls { width: 100%; display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; min-height: 0; }
+.ctl-left, .ctl-right { display: flex; align-items: flex-end; gap: 12px; }
+
+.rooted { display: grid; justify-items: center; gap: 6px; }
+.joy {
+  position: relative; width: 82px; height: 82px; border-radius: 50%; cursor: pointer; display: grid; place-items: center;
+  background: var(--glass); border: 1px solid var(--rule); box-shadow: 0 4px 14px rgba(12,19,18,.2);
+}
+.joy svg { width: 62px; height: 62px; }
+.joy-label { font-size: .78rem; letter-spacing: .12em; color: var(--on-night); text-shadow: 0 1px 6px rgba(0,0,0,.7); }
+.shake { animation: shake .5s ease; }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-7px); } 40% { transform: translateX(7px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(3px); } }
+
+.rustle { display: flex; align-items: flex-end; gap: 12px; }
+.gauge { width: clamp(138px, 20vw, 200px); padding: 8px 10px 8px; display: grid; gap: 2px; }
+.gauge svg { width: 100%; height: auto; overflow: visible; }
+.gauge-row { display: flex; justify-content: space-between; gap: 8px; font-size: .74rem; color: var(--ink-2); letter-spacing: .06em; }
+.gauge-row b { color: var(--tung); font-variant-numeric: tabular-nums; }
+.g-track { fill: none; stroke: var(--paper-2); stroke-width: 9; stroke-linecap: round; }
+.g-band { fill: none; stroke: var(--gold); stroke-width: 9; }
+.g-needle { stroke: var(--ink); stroke-width: 3; stroke-linecap: round; }
+.round-btn, .rustle-btn {
+  width: clamp(92px, 13vw, 124px); height: clamp(92px, 13vw, 124px); border-radius: 50%; cursor: pointer;
+  font-family: var(--font-display); font-size: 1.35rem; letter-spacing: .1em;
+  border: 3px solid rgba(255,255,255,.7); box-shadow: var(--shadow);
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; touch-action: none;
+}
+.rustle-btn { background: var(--leaf); color: #eef6f0; }
+.rustle-btn.hit { transform: scale(.94); }
+.round-btn { background: var(--paper); color: var(--ink); }
+.round-btn.down { background: var(--leaf); color: #eef6f0; }
+.round-btn-quiet { width: clamp(76px, 10vw, 96px); height: clamp(76px, 10vw, 96px); font-size: 1.05rem; background: var(--glass); }
+
+/* ---------- vertical chapter card ---------- */
+.stage-card {
+  position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; cursor: pointer;
+  background: var(--night-glass); color: var(--on-night);
+  padding-left: var(--gx-l); padding-right: var(--gx-r); padding-block: var(--gy-t) var(--gy-b);
+  opacity: 0; transition: opacity .7s ease;
+}
+.stage-card.show { opacity: 1; }
+.sc-inner { display: flex; flex-direction: row-reverse; align-items: flex-start; gap: clamp(16px, 4vw, 52px); max-width: 100%; }
+.sc-title {
+  writing-mode: vertical-rl; white-space: nowrap; margin: 0; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(2.3rem, 1.4rem + 4.2vw, 4.8rem); letter-spacing: .2em; line-height: 1.1;
+}
+.sc-kicker { writing-mode: vertical-rl; white-space: nowrap; font-family: var(--font-display); font-size: clamp(1.05rem, .9rem + .8vw, 1.55rem); letter-spacing: .34em; color: var(--on-night-2); }
+.sc-side { display: grid; gap: 12px; max-width: 17rem; align-self: flex-end; justify-items: start; }
+.sc-side p { margin: 0; line-height: 1.7; }
+.sc-ref { font-size: .82rem; letter-spacing: .12em; color: var(--gold-soft); }
+.sc-goal { font-family: var(--font-display); font-size: clamp(1.02rem, .95rem + .4vw, 1.25rem); }
+.sc-tap { font-size: .76rem; color: var(--on-night-2); letter-spacing: .12em; }
+.seal {
+  width: 3.1rem; height: 3.1rem; display: grid; place-items: center; flex: none;
+  background: var(--tung); color: #fbeff1; font-family: var(--font-display); font-weight: 700; font-size: 1.55rem;
+  border-radius: 7px; box-shadow: inset 0 0 0 3px rgba(251, 239, 241, .55); transform: rotate(-4deg);
+}
+.seal-sm { width: 2.4rem; height: 2.4rem; font-size: 1.2rem; }
+
+/* ---------- title: a hanging scroll beside the tree ---------- */
+.title-screen {
+  position: fixed; inset: 0; z-index: 20; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: minmax(0, 1fr) auto;
+  gap: 18px; padding-left: var(--gx-l); padding-right: var(--gx-r); padding-block: calc(var(--gy-t) + 14px) var(--gy-b);
+  background: linear-gradient(0deg, rgba(12,19,18,.5) 0%, rgba(12,19,18,0) 36%);
+}
+.scroll {
+  grid-column: 2; grid-row: 1 / span 2; align-self: start; justify-self: end; position: relative; max-height: 100%; box-sizing: border-box;
+  display: flex; flex-direction: row-reverse; align-items: flex-start; gap: clamp(8px, 1.4vw, 18px);
+  padding: clamp(18px, 3vh, 34px) clamp(16px, 2.2vw, 30px) clamp(16px, 2.6vh, 30px);
+  margin-right: clamp(0px, 2vw, 36px);
+  color: var(--ink); box-shadow: var(--shadow);
+  background: linear-gradient(90deg, rgba(27,38,36,.05), transparent 12%, transparent 88%, rgba(27,38,36,.05)), var(--paper);
+}
+.scroll::before, .scroll::after {
+  content: ""; position: absolute; left: -9px; right: -9px; height: 11px; border-radius: 6px;
+  background: linear-gradient(180deg, #5a4535, #34271e); box-shadow: 0 2px 4px rgba(0,0,0,.3);
+}
+.scroll::before { top: -6px; }
+.scroll::after { bottom: -6px; }
+.title-main {
+  writing-mode: vertical-rl; white-space: nowrap; margin: 0; font-family: var(--font-display); font-weight: 700; line-height: 1.05;
+  font-size: min(clamp(2.3rem, 1.1rem + 4.2vw, 4.7rem), 8.6vh); letter-spacing: .12em;
+}
+.title-sub { writing-mode: vertical-rl; white-space: nowrap; margin: 2.6em 0 0; font-family: var(--font-display); font-size: min(clamp(1rem, .8rem + .9vw, 1.5rem), 3.4vh); letter-spacing: .3em; color: var(--ink-2); }
+.scroll .seal { align-self: flex-end; margin-top: 1.4rem; }
+.title-actions { grid-column: 1; grid-row: 2; display: grid; gap: 10px; width: min(23rem, 100%); align-self: end; padding: 14px; border-radius: 14px; }
+.title-note { margin: 0 0 2px; color: var(--ink); font-size: .9rem; line-height: 1.7; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; }
+.row > .btn { flex: 1 1 auto; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 11px 20px;
+  border-radius: 12px; border: 1px solid var(--rule); background: var(--card); color: var(--ink); cursor: pointer;
+  font: 500 1rem/1.25 var(--font-ui); letter-spacing: .04em; text-align: center;
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; touch-action: manipulation;
+}
+.btn:disabled { opacity: .55; cursor: default; }
+.btn-primary { background: var(--tung); border-color: var(--tung); color: #fff7f8; }
+.btn-lg { min-height: 56px; font-size: 1.12rem; font-family: var(--font-display); letter-spacing: .14em; }
+.btn-quiet { background: rgba(244, 247, 242, .86); }
+.btn-text { background: transparent; border-color: transparent; color: var(--ink-2); }
+
+/* ---------- sheets (questions, cards, notes) ---------- */
+.modal {
+  position: fixed; inset: 0; z-index: 40; display: grid; place-items: center;
+  padding-left: var(--gx-l); padding-right: var(--gx-r); padding-block: var(--gy-t) var(--gy-b);
+  background: rgba(12, 19, 18, 0.45);
+}
+.menu { z-index: 45; }
+.menu-list { display: grid; gap: 8px; }
+.menu-list .btn { justify-content: flex-start; }
+.sheet {
+  width: 100%; max-width: 40rem; max-height: 100%; overflow: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+  display: grid; gap: 16px; align-content: start; padding: clamp(18px, 3vw, 30px);
+  background: var(--paper); color: var(--ink); border-radius: 18px; box-shadow: var(--shadow);
+  animation: rise .35s ease;
+}
+.sheet.wide { max-width: 54rem; }
+@keyframes rise { from { transform: translateY(14px); opacity: 0; } to { transform: none; opacity: 1; } }
+.sheet input, .sheet textarea, .sheet p, .sheet li, .sheet td, .poem { -webkit-user-select: text; user-select: text; }
+.sheet h2 { margin: 0; font-family: var(--font-display); font-size: clamp(1.35rem, 1.1rem + 1vw, 1.95rem); line-height: 1.35; text-wrap: balance; }
+.sheet h3 { margin: 0; font-family: var(--font-display); font-size: 1.18rem; }
+.sheet p { margin: 0; line-height: 1.8; }
+.sheet ul, .sheet ol { margin: 0; padding-left: 1.3em; line-height: 1.8; }
+.eyebrow { font-size: .74rem; letter-spacing: .18em; color: var(--tung); font-weight: 700; }
+.muted { color: var(--ink-2); font-size: .92rem; }
+.prompt { font-family: var(--font-display); font-size: clamp(1.12rem, 1rem + .5vw, 1.42rem); line-height: 1.7 !important; }
+.options { display: grid; gap: 10px; }
+.opt {
+  display: grid; grid-template-columns: 2rem minmax(0, 1fr); gap: 12px; align-items: start; text-align: left;
+  padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--rule); background: var(--card); color: var(--ink);
+  font: 1rem/1.65 var(--font-ui); cursor: pointer; touch-action: manipulation;
+}
+.opt .k { width: 2rem; height: 2rem; border-radius: 50%; display: grid; place-items: center; background: var(--paper-2); font-weight: 700; font-size: .88rem; }
+.opt:disabled { cursor: default; }
+.opt.wrong { border-color: var(--tung-2); background: var(--tung-soft); color: var(--ink-2); }
+.opt.wrong .k { background: var(--tung-2); color: #fff; }
+.opt.right { border-color: var(--leaf); background: var(--leaf-soft); }
+.opt.right .k { background: var(--leaf); color: #fff; }
+.opt.picked { border-color: var(--tung); box-shadow: inset 0 0 0 1px var(--tung); }
+.feedback { padding: 12px 14px; border-radius: 12px; line-height: 1.75; }
+.feedback.ok { background: var(--leaf-soft); color: #1b3a2f; }
+.feedback.no { background: var(--tung-soft); color: #6c2034; }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+.actions.spread { justify-content: space-between; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13.5rem), 1fr)); gap: 12px; }
+.card {
+  position: relative; display: grid; gap: 6px; align-content: start; text-align: left; padding: 16px 16px 18px;
+  border-radius: 14px; border: 1.5px solid var(--rule); background: var(--card); color: var(--ink); cursor: pointer;
+  font: inherit; touch-action: manipulation;
+}
+.card h3 { font-family: var(--font-display); font-size: 1.22rem; margin: 0; }
+.card p { margin: 0; font-size: .9rem; line-height: 1.65; color: var(--ink-2); }
+.card .tag { font-size: .72rem; letter-spacing: .14em; color: var(--tung); font-weight: 700; }
+.card .done { position: absolute; top: 12px; right: 12px; font-size: .72rem; color: var(--leaf); background: var(--leaf-soft); padding: 2px 8px; border-radius: 999px; }
+.card.alt { background: var(--gold-soft); border-color: rgba(181,134,58,.35); }
+
+.field { display: grid; gap: 6px; }
+.field label { font-size: .85rem; color: var(--ink-2); letter-spacing: .06em; }
+.input, .lined {
+  width: 100%; box-sizing: border-box; border: 1px solid var(--rule); border-radius: 10px; background: var(--card); color: var(--ink);
+  font: 1.05rem/1.6 var(--font-ui); padding: 10px 12px;
+}
+.lined {
+  min-height: 11.5rem; resize: vertical; font-family: var(--font-display); font-size: 1.16rem; line-height: 2.2rem; padding: 0 14px;
+  background-color: #fffefa;
+  background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(2.2rem - 1px), rgba(168, 51, 78, .2) calc(2.2rem - 1px), rgba(168, 51, 78, .2) 2.2rem);
+  background-attachment: local;
+}
+.frames { display: flex; flex-wrap: wrap; gap: 8px; }
+.frame-chip { font-family: var(--font-display); font-size: .98rem; padding: 6px 12px; border-radius: 999px; background: var(--paper-2); color: var(--ink); border: 0; cursor: pointer; }
+details { border-radius: 12px; background: var(--paper-2); padding: 10px 14px; }
+details summary { cursor: pointer; font-size: .9rem; color: var(--ink-2); }
+.poem { font-family: var(--font-display); font-size: 1.1rem; line-height: 2; white-space: pre-line; margin: 8px 0 0; }
+.note { font-size: .82rem; color: var(--ink-2); line-height: 1.7; }
+
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.6; }
+th { font-size: .76rem; letter-spacing: .1em; color: var(--ink-2); font-weight: 700; }
+
+.result-head { display: flex; align-items: center; gap: 14px; }
+.result-head > div { min-width: 0; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr)); gap: 10px; }
+.stat { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 10px 12px; display: grid; gap: 2px; }
+.stat span { font-size: .74rem; letter-spacing: .1em; color: var(--ink-2); }
+.stat b { font-family: var(--font-display); font-size: 1.4rem; font-variant-numeric: tabular-nums; }
+.rblock { display: grid; gap: 6px; padding-top: 12px; border-top: 1px solid var(--rule); }
+.rblock h3 { font-size: 1.05rem; color: var(--leaf); }
+.rblock p { white-space: pre-line; }
+.empty { color: var(--ink-3); font-size: .9rem; }
+
+.fade { position: fixed; inset: 0; z-index: 50; background: #050807; opacity: 0; pointer-events: none; }
+.fade.white { background: #fffaf0; }
+.fatal {
+  position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; text-align: center; background: var(--night); color: var(--on-night);
+  padding-left: var(--gx-l); padding-right: var(--gx-r); padding-block: var(--gy-t) var(--gy-b); font-size: 1.05rem; line-height: 1.8;
+}
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 560px) {
+  .hud-stage { font-size: 1rem; }
+  .scroll { grid-row: 1; margin-right: 4px; }
+  .title-actions { grid-column: 1 / span 2; width: 100%; box-sizing: border-box; }
+  .sc-inner { gap: 16px; }
+  .sc-side { max-width: 12rem; }
+  .gauge { width: 128px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+</style>
+
+<canvas id="stage" tabindex="0" aria-label="遊戲畫面。拖曳可以環顧四周，點一下可以互動。"></canvas>
+
+<div id="fx" aria-hidden="true">
+  <div id="edge-arrow" class="edge-arrow" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></div>
+  <div id="hold-ring" class="hold-ring" hidden>
+    <svg viewBox="0 0 100 100"><circle class="r-track" cx="50" cy="50" r="40"/><circle class="r-zone" id="r-zone" cx="50" cy="50" r="40"/><circle class="r-prog" id="r-prog" cx="50" cy="50" r="40"/></svg>
+  </div>
+</div>
+
+<div id="vignette" class="vignette" hidden></div>
+<div id="train-window" class="train-window" hidden></div>
+<div id="thought" class="thought slip" hidden>
+  <svg viewBox="0 0 160 120" aria-hidden="true">
+    <rect x="76" y="62" width="8" height="46" rx="3" fill="#6b5a4c"/>
+    <path d="M80 70 L56 52 M80 76 L104 56 M80 88 L64 78" stroke="#6b5a4c" stroke-width="4" stroke-linecap="round"/>
+    <g fill="#c4423c"><circle cx="54" cy="44" r="18"/><circle cx="80" cy="30" r="22"/><circle cx="106" cy="46" r="18"/><circle cx="70" cy="56" r="14"/><circle cx="94" cy="58" r="14"/></g>
+    <g fill="#e2744f"><circle cx="64" cy="34" r="7"/><circle cx="92" cy="26" r="6"/><circle cx="110" cy="40" r="5"/><circle cx="48" cy="48" r="5"/></g>
+    <path d="M40 110 H120" stroke="#9aa59f" stroke-width="3" stroke-linecap="round"/>
+  </svg>
+  <p>他的心裡，開著另一棵樹。</p>
+</div>
+
+<div id="ui">
+  <header id="hud" class="hud" hidden>
+    <div class="hud-left">
+      <div class="hud-stage slip" id="hud-stage"></div>
+      <div class="hud-ref slip" id="hud-ref">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 5.5C3.5 4.7 4.2 4 5 4h6v15.5H5c-.8 0-1.5-.7-1.5-1.5z"/><path d="M20.5 5.5c0-.8-.7-1.5-1.5-1.5h-6v15.5h6c.8 0 1.5-.7 1.5-1.5z"/></svg>
+        <span id="hud-ref-text"></span>
+      </div>
+    </div>
+    <div class="hud-center">
+      <div class="meter slip" id="meter" hidden>
+        <span>期盼值</span>
+        <div class="meter-bar"><i id="meter-fill"></i>
+          <svg viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path d="M38 -1 L44 5 L40 7 L47 13" fill="none" stroke="#fbfcf9" stroke-width="2"/><path d="M66 -1 L61 4 L67 8 L63 13" fill="none" stroke="#fbfcf9" stroke-width="2"/></svg>
+        </div>
+      </div>
+      <div class="counter slip" id="counter" hidden></div>
+    </div>
+    <div class="hud-right">
+      <button class="icon-btn" id="btn-sound" type="button" aria-label="關閉聲音">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="snd-on" d="M15.5 9a4 4 0 0 1 0 6"/><path class="snd-on" d="M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="snd-off" d="M16 9.5l5 5M21 9.5l-5 5" style="display:none"/></svg>
+      </button>
+      <button class="icon-btn" id="btn-menu" type="button" aria-label="開啟選單">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="mid">
+    <div id="hint" class="hint slip" role="status" hidden></div>
+    <div id="hearts" class="hearts" hidden><svg id="heart-svg" viewBox="-4 -4 108 100" aria-hidden="true"></svg><span id="hearts-count"></span></div>
+  </div>
+
+  <div class="bottom">
+    <section id="caption" class="caption slip" hidden aria-live="polite">
+      <span class="caption-who" id="caption-who" hidden></span>
+      <p class="caption-text" id="caption-text"></p>
+      <button class="caption-next" id="caption-next" type="button">繼續</button>
+    </section>
+    <div class="controls">
+      <div class="ctl-left">
+        <div id="rooted" class="rooted" hidden>
+          <button class="joy" id="btn-joy" type="button" aria-label="移動（已經扎根，無法移動）">
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+              <circle cx="32" cy="32" r="27" fill="none" stroke="#7b8985" stroke-width="2" stroke-dasharray="4 5"/>
+              <circle cx="32" cy="30" r="11" fill="#7b8985"/>
+              <path d="M32 41 C31 47 27 50 22 54 M32 41 C33 48 37 51 42 55 M32 41 V58" stroke="#6b5a4c" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <span class="joy-label">移動</span>
+        </div>
+        <button id="btn-walk" class="round-btn" type="button" hidden>往前走</button>
+      </div>
+      <div class="ctl-right">
+        <div id="rustle" class="rustle" hidden>
+          <div class="gauge slip">
+            <svg viewBox="0 0 120 68" aria-hidden="true">
+              <path class="g-track" d="M10 60 A50 50 0 0 1 110 60"/>
+              <path class="g-band" id="g-band" d="M10 60 A50 50 0 0 1 10 60"/>
+              <line class="g-needle" id="g-needle" x1="60" y1="60" x2="16" y2="60"/>
+              <circle cx="60" cy="60" r="4" fill="#1b2624"/>
+            </svg>
+            <div class="gauge-row"><span>葉的顫動</span><b id="resonance">共鳴 0%</b></div>
+          </div>
+          <button class="rustle-btn" id="btn-rustle" type="button">沙沙</button>
+        </div>
+        <button id="btn-lookup" class="round-btn round-btn-quiet" type="button" hidden>抬頭</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="title-screen" class="title-screen">
+  <div class="scroll">
+    <h1 class="title-main">五百年的守候</h1>
+    <p class="title-sub">一棵開花的樹</p>
+    <div class="seal seal-sm" aria-hidden="true">桐</div>
+  </div>
+  <div class="title-actions slip">
+    <p class="title-note">八年級國文〈一棵開花的樹〉3D 互動閱讀。遊戲裡不放詩句原文，請打開課本，邊讀邊玩。</p>
+    <button class="btn btn-primary btn-lg" id="btn-start" type="button" disabled>畫面準備中…</button>
+    <button class="btn" id="btn-continue" type="button" hidden>進入二周目</button>
+    <div class="row">
+      <button class="btn btn-quiet" id="btn-chapters" type="button">選擇章節</button>
+      <button class="btn btn-quiet" id="btn-teacher" type="button">給老師的說明</button>
+    </div>
+  </div>
+</section>
+
+<section id="stage-card" class="stage-card" hidden aria-live="polite">
+  <div class="sc-inner">
+    <h2 class="sc-title" id="sc-title"></h2>
+    <div class="sc-kicker" id="sc-kicker"></div>
+    <div class="sc-side">
+      <div class="seal" id="sc-seal" aria-hidden="true"></div>
+      <p class="sc-ref" id="sc-ref"></p>
+      <p class="sc-goal" id="sc-goal"></p>
+      <p class="sc-tap">點一下開始</p>
+    </div>
+  </div>
+</section>
+
+<div id="modal" class="modal" hidden><div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="遊戲對話框"></div></div>
+<div id="menu" class="modal menu" hidden><div class="sheet" id="menu-sheet" role="dialog" aria-modal="true" aria-label="選單"></div></div>
+<div id="fade" class="fade"></div>
+<div id="fatal" class="fatal" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+'use strict';
+/* ---- 00-core.js ---- */
+/* ===================== 基礎工具 ===================== */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+const lerp = (a, b, t) => a + (b - a) * t;
+const sstep = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+const E = {
+  linear: t => t,
+  inOut: t => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2),
+  out: t => 1 - Math.pow(1 - t, 3),
+  in: t => t * t * t,
+  sine: t => -(Math.cos(Math.PI * t) - 1) / 2,
+  outBack: t => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); }
+};
+const REDUCED = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const wrapAngle = a => { while (a > Math.PI) a -= Math.PI * 2; while (a < -Math.PI) a += Math.PI * 2; return a; };
+
+function mulberry(seed) {
+  let a = seed >>> 0;
+  return function () {
+    a = (a + 0x6D2B79F5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function hash2(x, y, s) {
+  let h = Math.imul(x | 0, 374761393) ^ Math.imul(y | 0, 668265263) ^ Math.imul((s | 0) + 1, 1442695041);
+  h = Math.imul(h ^ (h >>> 13), 1274126177);
+  h ^= h >>> 16;
+  return (h >>> 0) / 4294967296;
+}
+function vnoise(x, y, s) {
+  const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+  const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+  const a = hash2(xi, yi, s), b = hash2(xi + 1, yi, s), c = hash2(xi, yi + 1, s), d = hash2(xi + 1, yi + 1, s);
+  return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+}
+function fbm(x, y, s, oct = 4) {
+  let sum = 0, amp = 0.5, f = 1, norm = 0;
+  for (let i = 0; i < oct; i++) { sum += amp * vnoise(x * f, y * f, s + i * 17); norm += amp; amp *= 0.5; f *= 2.03; }
+  return sum / norm;
+}
+
+/* ===================== 流程控制：每一章是一個可中斷的「run」 ===================== */
+let AUTO = false;      // 測試用自動遊玩
+let SPEED = 1;         // 測試用加速
+const ABORT = new Error('stage-aborted');
+let RUN = { cancelled: false, rejects: new Set() };
+const FREE = { cancelled: false, rejects: new Set() };
+
+function cancelRun() {
+  RUN.cancelled = true;
+  for (const r of RUN.rejects) r(ABORT);
+  RUN.rejects.clear();
+  RUN = { cancelled: false, rejects: new Set() };
+}
+function pend(exec, run = RUN) {
+  const p = new Promise((resolve, reject) => {
+    if (run.cancelled) { reject(ABORT); return; }
+    run.rejects.add(reject);
+    exec(v => { if (run.cancelled) return; run.rejects.delete(reject); resolve(v); }, run);
+  });
+  p.catch(() => {});
+  return p;
+}
+const TWEENS = new Set();
+function tween(dur, fn, ease = E.inOut, run = RUN) {
+  return pend((resolve, r) => { TWEENS.add({ d: Math.max(1e-4, dur), t: 0, fn, ease, resolve, r }); }, run);
+}
+const freeTween = (dur, fn, ease) => tween(dur, fn, ease, FREE);
+const wait = s => tween(s, () => {}, E.linear);
+function stepTweens(dt) {
+  for (const w of TWEENS) {
+    if (w.r.cancelled) { TWEENS.delete(w); continue; }
+    w.t += dt;
+    const k = Math.min(1, w.t / w.d);
+    try { w.fn(w.ease(k), k); } catch (err) { console.error(err); }
+    if (k >= 1) { TWEENS.delete(w); w.resolve(); }
+  }
+}
+const WAITERS = new Set();
+function until(pred) { return pend((resolve, r) => { WAITERS.add({ pred, resolve, r }); }); }
+function stepWaiters() {
+  for (const w of WAITERS) {
+    if (w.r.cancelled) { WAITERS.delete(w); continue; }
+    let ok = false;
+    try { ok = w.pred(); } catch (err) { console.error(err); }
+    if (ok) { WAITERS.delete(w); w.resolve(); }
+  }
+}
+/* 每章可掛的輸入與更新鉤子 */
+const hooks = {
+  tap: null, down: null, up: null, update: null, key: null,
+  reset() { this.tap = this.down = this.up = this.update = this.key = null; }
+};
+
+/* ===================== 進度存檔（只存在這台裝置） ===================== */
+const SAVE_KEY = 'wubainian.save.v1';
+const blankSave = () => ({
+  name: '', answers: {}, blooms: 0, early: 0, late: 0, wish: '', resonance: null, caught: 0,
+  friend: null, travel: {}, rewrite: {}, cleared: false, muted: false
+});
+let SAVE = blankSave();
+function loadSave() {
+  try { const raw = localStorage.getItem(SAVE_KEY); if (raw) SAVE = Object.assign(blankSave(), JSON.parse(raw)); } catch (e) { /* 無法讀取時用空白進度 */ }
+}
+function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(SAVE)); } catch (e) { /* 私密模式等情況不存 */ } }
+
+/* ===================== 聲音（全部即時合成，不載入檔案） ===================== */
+const SND = {
+  ctx: null, master: null, muted: false, noise: null, rustle: null, wind: null, droneNodes: null,
+  init() {
+    if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    try { this.ctx = new AC(); } catch (e) { this.ctx = null; return; }
+    const c = this.ctx;
+    this.master = c.createGain();
+    this.master.gain.value = this.muted ? 0 : 0.8;
+    this.master.connect(c.destination);
+    const len = c.sampleRate * 2, buf = c.createBuffer(1, len, c.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    this.noise = buf;
+    this.rustle = this.loopNoise('bandpass', 3400, 0.8);
+    this.wind = this.loopNoise('lowpass', 380, 0.6);
+  },
+  loopNoise(type, freq, q) {
+    const c = this.ctx, src = c.createBufferSource(); src.buffer = this.noise; src.loop = true;
+    const f = c.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = q;
+    const g = c.createGain(); g.gain.value = 0;
+    src.connect(f); f.connect(g); g.connect(this.master); src.start();
+    return { g, f };
+  },
+  level(node, v, tc = 0.15) {
+    if (!this.ctx || !node) return;
+    const now = this.ctx.currentTime;
+    node.g.gain.cancelScheduledValues(now);
+    node.g.gain.setTargetAtTime(v, now, tc);
+  },
+  tone(freq, dur = 1.2, type = 'sine', vol = 0.18, delay = 0) {
+    if (!this.ctx) return;
+    const c = this.ctx, t0 = c.currentTime + delay;
+    const o = c.createOscillator(); o.type = type; o.frequency.value = freq;
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.linearRampToValueAtTime(vol, t0 + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(g); g.connect(this.master); o.start(t0); o.stop(t0 + dur + 0.05);
+  },
+  bell(f = 523.25) { this.tone(f, 2.6, 'sine', 0.15); this.tone(f * 2.01, 1.7, 'sine', 0.055); this.tone(f * 2.98, 1.1, 'sine', 0.03); },
+  chime(notes = [659.25, 783.99, 987.77]) { notes.forEach((f, i) => this.tone(f, 1.5, 'triangle', 0.07, i * 0.09)); },
+  pluck(f = 880) { this.tone(f, 0.45, 'triangle', 0.085); this.tone(f * 1.5, 0.3, 'sine', 0.03); },
+  low() { this.tone(196, 0.35, 'sine', 0.09); this.tone(185, 0.4, 'sine', 0.05, 0.08); },
+  heart() { this.tone(72, 0.32, 'sine', 0.26); this.tone(64, 0.3, 'sine', 0.2, 0.2); },
+  step(vol = 0.1) {
+    if (!this.ctx || vol < 0.004) return;
+    const c = this.ctx, t0 = c.currentTime, src = c.createBufferSource(); src.buffer = this.noise;
+    const f = c.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 240;
+    const g = c.createGain(); g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.16);
+    src.connect(f); f.connect(g); g.connect(this.master); src.start(t0, Math.random() * 1.5); src.stop(t0 + 0.2);
+  },
+  whoosh(dur = 1.6, vol = 0.22) {
+    if (!this.ctx) return;
+    const c = this.ctx, t0 = c.currentTime, src = c.createBufferSource(); src.buffer = this.noise; src.loop = true;
+    const f = c.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 0.9;
+    f.frequency.setValueAtTime(300, t0); f.frequency.exponentialRampToValueAtTime(2400, t0 + dur * 0.5); f.frequency.exponentialRampToValueAtTime(500, t0 + dur);
+    const g = c.createGain(); g.gain.setValueAtTime(0.0001, t0); g.gain.linearRampToValueAtTime(vol, t0 + dur * 0.4); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    src.connect(f); f.connect(g); g.connect(this.master); src.start(t0); src.stop(t0 + dur + 0.05);
+  },
+  drone(on) {
+    if (!this.ctx) return;
+    const c = this.ctx;
+    if (on && !this.droneNodes) {
+      const g = c.createGain(); g.gain.value = 0.0001; g.connect(this.master);
+      const f = c.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 520; f.connect(g);
+      const oscs = [110, 164.8, 220.4].map((fr, i) => { const o = c.createOscillator(); o.type = i === 1 ? 'triangle' : 'sine'; o.frequency.value = fr; o.connect(f); o.start(); return o; });
+      g.gain.setTargetAtTime(0.035, c.currentTime, 1.2);
+      this.droneNodes = { g, oscs };
+    } else if (!on && this.droneNodes) {
+      const n = this.droneNodes; this.droneNodes = null;
+      n.g.gain.setTargetAtTime(0.0001, c.currentTime, 0.6);
+      setTimeout(() => n.oscs.forEach(o => { try { o.stop(); } catch (e) { /* 已停止 */ } }), 3000);
+    }
+  },
+  setMuted(m) {
+    this.muted = m;
+    if (this.master && this.ctx) this.master.gain.setTargetAtTime(m ? 0 : 0.8, this.ctx.currentTime, 0.05);
+  }
+};
+
+/* ---- 10-world.js ---- */
+/* ===================== 3D 世界：山徑、油桐樹、旅人 ===================== */
+let renderer = null, camera = null, activeScene = null, sceneName = '';
+let V3, UP, ZF, TMPV, TMPV2, TMPV3, TMPQ, TMPQ2, TMPM, TMPS, TMPE, TMPC;
+const W = { timeScale: 1, time: 0 };
+const TREE = { x: 7.0, z: 2.0 };
+let TREE_BASE = 0, TREE_CAM = null, TREE_FWD = null, U_TREE = 0.5, U_FAR = 0.2;
+let PATH = null, PATH_SAMPLES = null, PATH_LEN = 1;
+let FLOWER_GEO = null, FLOWER_MAT = null, TREE_FLOWER_MAT = null;
+
+function initThreeGlobals() {
+  V3 = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
+  UP = V3(0, 1, 0); ZF = V3(0, 0, 1);
+  TMPV = V3(); TMPV2 = V3(); TMPV3 = V3(); TMPS = V3();
+  TMPQ = new THREE.Quaternion(); TMPQ2 = new THREE.Quaternion();
+  TMPM = new THREE.Matrix4(); TMPE = new THREE.Euler(); TMPC = new THREE.Color();
+  TREE_CAM = V3(); TREE_FWD = V3();
+}
+
+function initRenderer() {
+  const canvas = $('#stage');
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+  renderer.setSize(window.innerWidth, window.innerHeight, false);
+  camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.08, 2400);
+  camera.rotation.order = 'YXZ';
+}
+function onResize() {
+  if (!renderer) return;
+  renderer.setSize(window.innerWidth, window.innerHeight, false);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  applyFov(true);
+}
+
+/* ---------- 共用貼圖與小工具 ---------- */
+let GLOW_TEX = null;
+function glowTex() {
+  if (GLOW_TEX) return GLOW_TEX;
+  const c = document.createElement('canvas'); c.width = c.height = 128;
+  const g = c.getContext('2d'), grd = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  grd.addColorStop(0, 'rgba(255,255,255,1)'); grd.addColorStop(0.22, 'rgba(255,255,255,0.6)');
+  grd.addColorStop(0.55, 'rgba(255,255,255,0.14)'); grd.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = grd; g.fillRect(0, 0, 128, 128);
+  GLOW_TEX = new THREE.CanvasTexture(c);
+  return GLOW_TEX;
+}
+function makeGlow(color, size, opacity = 1) {
+  const m = new THREE.SpriteMaterial({ map: glowTex(), color: new THREE.Color(color), transparent: true, opacity, blending: THREE.AdditiveBlending, depthWrite: false, fog: false });
+  const s = new THREE.Sprite(m); s.scale.setScalar(size); return s;
+}
+function randUnit(R) { const u = R() * 2 - 1, a = R() * Math.PI * 2, s = Math.sqrt(1 - u * u); return V3(s * Math.cos(a), u, s * Math.sin(a)); }
+function segDist(p, a, b) {
+  const ab = TMPV2.subVectors(b, a);
+  const t = clamp(TMPV3.subVectors(p, a).dot(ab) / Math.max(1e-6, ab.lengthSq()), 0, 1);
+  return TMPV3.copy(a).addScaledVector(ab, t).distanceTo(p);
+}
+function lambert(c, extra) { return new THREE.MeshLambertMaterial(Object.assign({ color: new THREE.Color(c) }, extra || {})); }
+/* 樹的視角：鏡頭周圍一小圈的枝葉不畫，避免擋住視線 */
+const NEAR = { value: 0 };
+function nearCut(mat) {
+  mat.onBeforeCompile = sh => {
+    sh.uniforms.uNearCut = NEAR;
+    sh.vertexShader = 'varying vec3 vNearWP;\n' + sh.vertexShader.replace('#include <project_vertex>',
+      '#include <project_vertex>\n vec4 nwp = vec4(transformed, 1.0);\n #ifdef USE_INSTANCING\n nwp = instanceMatrix * nwp;\n #endif\n vNearWP = (modelMatrix * nwp).xyz;');
+    sh.fragmentShader = 'uniform float uNearCut;\nvarying vec3 vNearWP;\n' + sh.fragmentShader.replace('void main() {',
+      'void main() {\n if (uNearCut > 0.0 && distance(vNearWP, cameraPosition) < uNearCut) discard;');
+  };
+  mat.customProgramCacheKey = () => 'nearcut';
+  return mat;
+}
+
+/* ---------- 天空與氣氛 ---------- */
+function makeSky() {
+  const mat = new THREE.ShaderMaterial({
+    uniforms: { top: { value: new THREE.Color() }, bot: { value: new THREE.Color() }, sunDir: { value: V3(0, 1, 0) }, sunCol: { value: new THREE.Color() }, sunAmt: { value: 0.6 } },
+    vertexShader: 'varying vec3 vDir; void main(){ vDir = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+    fragmentShader: 'uniform vec3 top; uniform vec3 bot; uniform vec3 sunDir; uniform vec3 sunCol; uniform float sunAmt; varying vec3 vDir;' +
+      'void main(){ vec3 d = normalize(vDir); float h = clamp(d.y * 1.5 + 0.1, 0.0, 1.0); vec3 c = mix(bot, top, pow(h, 0.75));' +
+      'float s = max(dot(d, normalize(sunDir)), 0.0); c += sunCol * (pow(s, 900.0) * 1.3 + pow(s, 14.0) * 0.22) * sunAmt; gl_FragColor = vec4(c, 1.0); }',
+    side: THREE.BackSide, depthWrite: false, fog: false
+  });
+  const m = new THREE.Mesh(new THREE.SphereGeometry(1500, 32, 16), mat);
+  m.renderOrder = -10; m.frustumCulled = false;
+  return m;
+}
+const MOOD_DEFS = {
+  dawn:      { top: '#9cbccd', bot: '#f1e6d6', fog: '#e4e1d4', near: 50, far: 900, hs: '#e9eef0', hg: '#6d7b57', hi: 0.68, sun: '#ffdcb3', si: 0.7, dir: [-0.72, 0.28, -0.5], sa: 1.0 },
+  spring:    { top: '#94bfd2', bot: '#eef0e3', fog: '#dfe6dc', near: 55, far: 930, hs: '#e7f0f2', hg: '#677a52', hi: 0.72, sun: '#fff0d6', si: 0.8, dir: [-0.6, 0.48, -0.55], sa: 0.85 },
+  may:       { top: '#7cb2cb', bot: '#e8f0ea', fog: '#d9e5e0', near: 60, far: 960, hs: '#eaf3f6', hg: '#5e7a4e', hi: 0.74, sun: '#fff6e4', si: 0.86, dir: [-0.38, 0.78, -0.35], sa: 0.7 },
+  afternoon: { top: '#84aec4', bot: '#f2e5cf', fog: '#e5ddcb', near: 60, far: 940, hs: '#eef0ea', hg: '#69744e', hi: 0.72, sun: '#ffe0b3', si: 0.88, dir: [0.62, 0.42, 0.42], sa: 0.85 },
+  grey:      { top: '#4c5761', bot: '#8b8f8c', fog: '#7d8381', near: 30, far: 620, hs: '#8f979c', hg: '#3a3f3c', hi: 0.62, sun: '#bdb7ac', si: 0.3, dir: [0.65, 0.22, 0.5], sa: 0.12 },
+  rain:      { top: '#525e67', bot: '#899295', fog: '#7a8588', near: 6, far: 150, hs: '#8c979d', hg: '#3d4441', hi: 0.62, sun: '#b9bcbc', si: 0.2, dir: [0.2, 0.8, 0.2], sa: 0 },
+  autumn:    { top: '#8ba7b8', bot: '#f0d3a2', fog: '#e6cda2', near: 50, far: 900, hs: '#f2e6cf', hg: '#7a6a44', hi: 0.74, sun: '#ffcd85', si: 0.84, dir: [0.62, 0.33, 0.42], sa: 0.95 },
+  night:     { top: '#0f1726', bot: '#29324a', fog: '#232c40', near: 40, far: 700, hs: '#3b4866', hg: '#151a22', hi: 0.42, sun: '#9fb2d8', si: 0.22, dir: [-0.3, 0.6, 0.4], sa: 0.15 }
+};
+const MOODS = {};
+const MOOD = { cur: null, from: null, to: null, t: 1, dur: 1 };
+function parseMoods() {
+  for (const k in MOOD_DEFS) {
+    const m = MOOD_DEFS[k];
+    MOODS[k] = { top: new THREE.Color(m.top), bot: new THREE.Color(m.bot), fog: new THREE.Color(m.fog), hs: new THREE.Color(m.hs), hg: new THREE.Color(m.hg), sun: new THREE.Color(m.sun), near: m.near, far: m.far, hi: m.hi, si: m.si, sa: m.sa, dir: V3(m.dir[0], m.dir[1], m.dir[2]).normalize() };
+  }
+}
+function cloneMood(m) { return { top: m.top.clone(), bot: m.bot.clone(), fog: m.fog.clone(), hs: m.hs.clone(), hg: m.hg.clone(), sun: m.sun.clone(), near: m.near, far: m.far, hi: m.hi, si: m.si, sa: m.sa, dir: m.dir.clone() }; }
+function setMood(name, dur = 0) {
+  const target = MOODS[name] || MOODS.may;
+  if (!MOOD.cur) MOOD.cur = cloneMood(target);
+  MOOD.from = cloneMood(MOOD.cur); MOOD.to = target; MOOD.t = 0; MOOD.dur = Math.max(1e-4, dur);
+  if (dur <= 0) { MOOD.t = 1; MOOD.cur = cloneMood(target); applyMood(); }
+}
+function stepMood(dt) {
+  if (MOOD.t >= 1 || !MOOD.to) return;
+  MOOD.t = Math.min(1, MOOD.t + dt / MOOD.dur);
+  const k = E.sine(MOOD.t), a = MOOD.from, b = MOOD.to, c = MOOD.cur;
+  ['top', 'bot', 'fog', 'hs', 'hg', 'sun'].forEach(key => c[key].copy(a[key]).lerp(b[key], k));
+  ['near', 'far', 'hi', 'si', 'sa'].forEach(key => { c[key] = lerp(a[key], b[key], k); });
+  c.dir.copy(a.dir).lerp(b.dir, k).normalize();
+  applyMood();
+}
+function applyMood() {
+  const m = MOOD.cur, u = W.sky.material.uniforms;
+  u.top.value.copy(m.top); u.bot.value.copy(m.bot); u.sunDir.value.copy(m.dir); u.sunCol.value.copy(m.sun); u.sunAmt.value = m.sa;
+  W.scene.fog.color.copy(m.fog); W.scene.fog.near = m.near; W.scene.fog.far = m.far;
+  W.hemi.color.copy(m.hs); W.hemi.groundColor.copy(m.hg); W.hemi.intensity = m.hi;
+  W.sun.color.copy(m.sun); W.sun.intensity = m.si; W.sun.position.copy(m.dir).multiplyScalar(100);
+}
+
+/* ---------- 山徑與地形 ---------- */
+const PATH_XZ = [[-34, -200], [-14, -158], [10, -118], [15, -86], [3, -58], [-8, -36], [-4, -15], [2, 2], [1, 20], [-6, 44], [-18, 80], [-34, 124], [-52, 170]];
+const pathY = z => 0.9 * Math.sin(z * 0.021) + 0.4 * Math.sin(z * 0.05 + 1.3);
+function buildPath() {
+  PATH = new THREE.CatmullRomCurve3(PATH_XZ.map(([x, z]) => V3(x, pathY(z), z)), false, 'centripetal');
+  PATH_SAMPLES = PATH.getSpacedPoints(800);
+  PATH_LEN = PATH.getLength();
+}
+function nearestOnPath(x, z) {
+  let best = Infinity, bi = 0;
+  for (let i = 0; i < PATH_SAMPLES.length; i++) {
+    const p = PATH_SAMPLES[i], dx = p.x - x, dz = p.z - z, d = dx * dx + dz * dz;
+    if (d < best) { best = d; bi = i; }
+  }
+  return { d: Math.sqrt(best), y: PATH_SAMPLES[bi].y, u: bi / (PATH_SAMPLES.length - 1) };
+}
+function terrainHeight(x, z, near) {
+  const n = near || nearestOnPath(x, z);
+  const r = Math.hypot(x, z + 20);
+  let h = (fbm(x * 0.011, z * 0.011, 3, 4) - 0.47) * 20 + (vnoise(x * 0.05, z * 0.05, 9) - 0.5) * 2.2;
+  h += sstep(80, 360, r) * (16 + fbm(x * 0.006, z * 0.006, 13, 3) * 46);
+  const k = sstep(2.6, 18, n.d);
+  return lerp(n.y - 0.06, h, k);
+}
+function groundAt(x, z) {
+  const n = nearestOnPath(x, z), t = terrainHeight(x, z, n);
+  return n.d < 1.5 ? Math.max(t, n.y + 0.075) : t;
+}
+function buildTerrain() {
+  const SEG = 120, EXT = 470, CZ = -10;
+  const g = new THREE.PlaneGeometry(2, 2, SEG, SEG); g.rotateX(-Math.PI / 2);
+  const pos = g.attributes.position;
+  for (let i = 0; i < pos.count; i++) {
+    const gx = pos.getX(i), gz = pos.getZ(i);
+    const x = Math.sign(gx) * Math.pow(Math.abs(gx), 1.75) * EXT;
+    const z = CZ + Math.sign(gz) * Math.pow(Math.abs(gz), 1.75) * EXT;
+    pos.setXYZ(i, x, terrainHeight(x, z), z);
+  }
+  const ng = g.toNonIndexed(); ng.computeVertexNormals();
+  const p = ng.attributes.position, nr = ng.attributes.normal, cols = new Float32Array(p.count * 3);
+  const pal = ['#6c9858', '#5f8c50', '#7aa564', '#56804a', '#86ac6a'].map(c => new THREE.Color(c));
+  const rock = new THREE.Color('#66755a'), dirt = new THREE.Color('#a49b72');
+  for (let f = 0; f < p.count; f += 3) {
+    const cx = (p.getX(f) + p.getX(f + 1) + p.getX(f + 2)) / 3, cz = (p.getZ(f) + p.getZ(f + 1) + p.getZ(f + 2)) / 3;
+    const nv = fbm(cx * 0.035, cz * 0.035, 21, 2);
+    const c = TMPC.copy(pal[clamp(Math.floor((nv - 0.25) / 0.5 * pal.length), 0, pal.length - 1)]);
+    const ny = (nr.getY(f) + nr.getY(f + 1) + nr.getY(f + 2)) / 3;
+    if (ny < 0.88) c.lerp(rock, 0.45);
+    const jit = 0.95 + hash2(f, 7, 3) * 0.1; c.multiplyScalar(jit);
+    if (Math.hypot(cx - TREE.x, cz - TREE.z) < 9) c.lerp(dirt, 0.12);
+    for (let k = 0; k < 3; k++) cols.set([c.r, c.g, c.b], (f + k) * 3);
+  }
+  ng.setAttribute('color', new THREE.BufferAttribute(cols, 3));
+  return new THREE.Mesh(ng, new THREE.MeshLambertMaterial({ vertexColors: true }));
+}
+function buildPathMesh() {
+  const N = 640, pts = PATH.getSpacedPoints(N), pos = [], col = [], idx = [];
+  const cDirt = new THREE.Color('#b9a37f'), cEdge = new THREE.Color('#98986a');
+  for (let i = 0; i <= N; i++) {
+    const p = pts[i], t = PATH.getTangentAt(i / N), sx = -t.z, sz = t.x, sl = Math.hypot(sx, sz) || 1;
+    const w = 1.15 + 0.3 * vnoise(i * 0.12, 3, 5);
+    const offs = [-w - 0.4, -w * 0.55, w * 0.55, w + 0.4];
+    for (let k = 0; k < 4; k++) {
+      const edge = k === 0 || k === 3;
+      pos.push(p.x + (sx / sl) * offs[k], p.y + (edge ? 0.03 : 0.075), p.z + (sz / sl) * offs[k]);
+      const c = edge ? cEdge : cDirt, j = 0.93 + 0.14 * hash2(i, k, 2);
+      col.push(c.r * j, c.g * j, c.b * j);
+    }
+    if (i < N) for (let k = 0; k < 3; k++) { const a = i * 4 + k, b = a + 1, c2 = a + 4, d = a + 5; idx.push(a, b, c2, b, d, c2); }
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  g.setIndex(idx); g.computeVertexNormals();
+  const m = new THREE.Mesh(g, new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }));
+  return m;
+}
+function buildMountains() {
+  const group = new THREE.Group();
+  [{ R: 520, H: 100, c: '#4f6f60', s: 3 }, { R: 640, H: 150, c: '#7a968b', s: 8 }, { R: 780, H: 210, c: '#a4b8b2', s: 15 }].forEach(L => {
+    const N = 280, pos = [], idx = [];
+    for (let i = 0; i <= N; i++) {
+      const a = (i / N) * Math.PI * 2, ca = Math.cos(a), sa = Math.sin(a);
+      const n = fbm(ca * 2.6 + L.s, sa * 2.6 + L.s, L.s, 5);
+      const peak = Math.pow(Math.max(0, Math.sin(a * 7 + L.s)), 6) * 0.28;
+      const top = -10 + L.H * (0.28 + 0.72 * Math.pow(n, 1.35) + peak);
+      const x = ca * L.R, z = sa * L.R - 10;
+      pos.push(x, -80, z, x, top, z);
+      if (i < N) { const b = i * 2; idx.push(b, b + 2, b + 1, b + 1, b + 2, b + 3); }
+    }
+    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setIndex(idx);
+    const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: new THREE.Color(L.c), side: THREE.DoubleSide, fog: true }));
+    m.frustumCulled = false; group.add(m);
+  });
+  return group;
+}
+function buildGrass() {
+  const COUNT = 1500, geo = new THREE.ConeGeometry(0.07, 0.55, 3, 1, true); geo.translate(0, 0.26, 0);
+  const mesh = new THREE.InstancedMesh(geo, lambert('#ffffff', { side: THREE.DoubleSide }), COUNT);
+  const R = mulberry(41), cols = ['#6f9c55', '#86b062', '#5d8a4a', '#9cbc6e', '#7aa35a'].map(c => new THREE.Color(c));
+  let n = 0, guard = 0;
+  while (n < COUNT && guard++ < 20000) {
+    const a = R() * Math.PI * 2, r = Math.sqrt(R()) * 36;
+    const x = TREE.x + Math.cos(a) * r, z = TREE.z + Math.sin(a) * r * 1.5;
+    const np = nearestOnPath(x, z); if (np.d < 1.8) continue;
+    TMPE.set((R() - 0.5) * 0.5, R() * 6.28, (R() - 0.5) * 0.5);
+    TMPM.compose(TMPV.set(x, terrainHeight(x, z, np), z), TMPQ.setFromEuler(TMPE), TMPS.setScalar(0.7 + R() * 1.0));
+    mesh.setMatrixAt(n, TMPM); mesh.setColorAt(n, cols[Math.floor(R() * cols.length)]); n++;
+  }
+  mesh.count = n; mesh.instanceMatrix.needsUpdate = true; if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+  return mesh;
+}
+function buildForest() {
+  const group = new THREE.Group(), COUNT = 300, R = mulberry(77);
+  const trunkGeo = new THREE.CylinderGeometry(0.14, 0.2, 1.6, 5); trunkGeo.translate(0, 0.8, 0);
+  const crownGeo = new THREE.IcosahedronGeometry(1, 0);
+  const trunks = new THREE.InstancedMesh(trunkGeo, lambert('#5d544a'), COUNT);
+  const crowns = new THREE.InstancedMesh(crownGeo, lambert('#ffffff'), COUNT);
+  const greens = ['#4d7a52', '#5c8a5c', '#3f6a4b', '#6a955f', '#56835a'].map(c => new THREE.Color(c));
+  const whites = ['#e9ece4', '#dfe5da', '#eef0ea'].map(c => new THREE.Color(c));
+  let n = 0, guard = 0;
+  while (n < COUNT && guard++ < 30000) {
+    const a = R() * Math.PI * 2, r = 22 + Math.pow(R(), 0.8) * 330;
+    const x = Math.cos(a) * r, z = Math.sin(a) * r - 20;
+    if (Math.hypot(x - TREE.x, z - TREE.z) < 16) continue;
+    const np = nearestOnPath(x, z); if (np.d < 7) continue;
+    const y = terrainHeight(x, z, np), s = 1.6 + R() * 2.6;
+    TMPM.compose(TMPV.set(x, y - 0.2, z), TMPQ.identity(), TMPS.set(s, s * 1.2, s)); trunks.setMatrixAt(n, TMPM);
+    TMPE.set(R(), R() * 6, R());
+    TMPM.compose(TMPV.set(x, y + s * 1.7, z), TMPQ.setFromEuler(TMPE), TMPS.set(s * 1.25, s * 1.1, s * 1.25)); crowns.setMatrixAt(n, TMPM);
+    const bloom = fbm(x * 0.02, z * 0.02, 31, 2) > 0.58;
+    crowns.setColorAt(n, bloom ? whites[n % 3] : greens[Math.floor(R() * greens.length)]);
+    n++;
+  }
+  trunks.count = crowns.count = n;
+  trunks.instanceMatrix.needsUpdate = crowns.instanceMatrix.needsUpdate = true;
+  if (crowns.instanceColor) crowns.instanceColor.needsUpdate = true;
+  group.add(trunks, crowns);
+  return group;
+}
+
+/* ---------- 油桐花（五瓣白花，花心帶紅） ---------- */
+function makeFlowerGeo() {
+  const pos = [], col = [], idx = [];
+  const cBase = new THREE.Color('#b8475e'), cMid = new THREE.Color('#f2d9de'), cWhite = new THREE.Color('#fbfaf5'), cEdge = new THREE.Color('#f1f1e8');
+  const rows = [[0.05, 0.05, 0.04, cBase], [0.3, 0.2, 0.08, cMid], [0.62, 0.3, 0.17, cWhite], [0.92, 0.27, 0.27, cWhite], [1.04, 0.12, 0.31, cEdge]];
+  for (let p = 0; p < 5; p++) {
+    const a = (p / 5) * Math.PI * 2 + 0.31, dx = Math.cos(a), dy = Math.sin(a), px = -dy, py = dx, b = pos.length / 3;
+    rows.forEach(([r, hw, lift, c], ri) => {
+      const cx = dx * r, cy = dy * r;
+      pos.push(cx + px * hw, cy + py * hw, lift, cx - px * hw, cy - py * hw, lift);
+      col.push(c.r, c.g, c.b, c.r, c.g, c.b);
+      if (ri > 0) { const i0 = b + (ri - 1) * 2; idx.push(i0, i0 + 1, i0 + 2, i0 + 1, i0 + 3, i0 + 2); }
+    });
+  }
+  const cS = new THREE.Color('#e7c25e'), b = pos.length / 3;
+  pos.push(0, 0, 0.13); col.push(cS.r, cS.g, cS.b);
+  for (let k = 0; k < 6; k++) { const a = (k / 6) * Math.PI * 2; pos.push(Math.cos(a) * 0.08, Math.sin(a) * 0.08, 0.06); col.push(cS.r, cS.g, cS.b); }
+  for (let k = 0; k < 6; k++) idx.push(b, b + 1 + k, b + 1 + ((k + 1) % 6));
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  g.setIndex(idx); g.computeVertexNormals();
+  return g;
+}
+function makeLeafGeo() {
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute([0, -1, 0, 0.55, 0, 0.08, 0, 1.1, 0, -0.55, 0, 0.08], 3));
+  g.setIndex([0, 1, 2, 0, 2, 3]); g.computeVertexNormals();
+  return g;
+}
+
+/* ---------- 樹的骨架（遞迴分枝） ---------- */
+function treeSkeleton(seed, scale) {
+  const R = mulberry(seed), segs = [], tips = [], MAXD = 3;
+  function perp(dir) {
+    const a = Math.abs(dir.y) < 0.9 ? UP : V3(1, 0, 0);
+    const p1 = V3().crossVectors(dir, a).normalize(), p2 = V3().crossVectors(dir, p1).normalize();
+    return [p1, p2];
+  }
+  function grow(start, dir, len, rad, depth, birth, parent) {
+    const end = start.clone().addScaledVector(dir, len), dur = depth === 0 ? 0.32 : 0.22, idx = segs.length;
+    segs.push({ start: start.clone(), end, dir: dir.clone(), len, rad, depth, birth, dur, parent, hidden: false });
+    if (depth === MAXD) { tips.push({ pos: end.clone(), dir: dir.clone(), birth: birth + dur, seg: idx }); return; }
+    const n = depth === 0 ? 5 : depth === 1 ? 3 : 2, [p1, p2] = perp(dir), az0 = R() * Math.PI * 2;
+    for (let i = 0; i < n; i++) {
+      const az = az0 + (i / n) * Math.PI * 2 + (R() - 0.5) * 0.7;
+      const tilt = depth === 0 ? 0.8 + R() * 0.22 : 0.42 + R() * 0.36;
+      const side = p1.clone().multiplyScalar(Math.cos(az)).addScaledVector(p2, Math.sin(az));
+      const nd = dir.clone().multiplyScalar(Math.cos(tilt)).addScaledVector(side, Math.sin(tilt));
+      nd.y += depth === 0 ? 0.1 : 0.2; nd.normalize();
+      grow(end, nd, len * (depth === 0 ? 0.78 : 0.7) * (0.85 + R() * 0.3), rad * 0.6, depth + 1, birth + dur * (0.7 + R() * 0.3), idx);
+    }
+  }
+  grow(V3(0, 0, 0), V3((R() - 0.5) * 0.08, 1, (R() - 0.5) * 0.08).normalize(), 3.3 * scale, 0.42 * scale, 0, 0, null);
+  let maxB = 0; segs.forEach(s => { maxB = Math.max(maxB, s.birth + s.dur); });
+  const k = 0.82 / maxB;
+  segs.forEach(s => { s.birth *= k; s.dur *= k; });
+  tips.forEach(t => { t.birth *= k; });
+  return { segs, tips };
+}
+
+/* ---------- 一棵油桐樹：分枝、葉團、花、花苞 ---------- */
+/* 樹的視角要看得見山徑：在視線經過的地方留出空隙 */
+function keepOutPoints(o) {
+  const pts = [];
+  if (!o.view) return pts;
+  const cam = o.view.pos.clone().sub(o.base), cone = o.view.cone || 0.3, len = o.view.len || 8;
+  pts.push([cam, 1.0, true]);
+  for (const d0 of o.view.dirs) {
+    const d = d0.clone().normalize(), a = Math.abs(d.y) < 0.9 ? UP : V3(1, 0, 0);
+    const p1 = V3().crossVectors(d, a).normalize(), p2 = V3().crossVectors(d, p1).normalize();
+    const rays = [d];
+    for (let k = 0; k < 6; k++) { const az = (k / 6) * Math.PI * 2; rays.push(d.clone().multiplyScalar(Math.cos(cone)).addScaledVector(p1, Math.sin(cone) * Math.cos(az)).addScaledVector(p2, Math.sin(cone) * Math.sin(az)).normalize()); }
+    for (const r of rays) for (let t = 0.6; t <= len; t += 0.6) pts.push([cam.clone().addScaledVector(r, t), 0.3, true]);
+  }
+  if (o.view.rise) { const r0 = o.view.rise.clone().sub(o.base); for (let k = 0; k <= 12; k++) pts.push([r0.clone().lerp(cam, k / 12), 0.3, false]); }
+  return pts;
+}
+function buildTungTree(o) {
+  const scale = o.scale || 1;
+  const ko = keepOutPoints(o);
+  const violates = sg => { for (const [pt, m] of ko) if (segDist(pt, sg.start, sg.end) < sg.rad + m) return true; return false; };
+  let sk = null, bestBad = Infinity;
+  for (let s = o.seed; s < o.seed + (ko.length ? 160 : 1); s++) {
+    const cand = treeSkeleton(s, scale);
+    if (!ko.length) { sk = cand; break; }
+    let bad = 0;
+    for (const sg of cand.segs) { if (violates(sg)) { bad += sg.depth < 2 ? 4 : 1; if (bad >= bestBad) break; } }
+    if (bad < bestBad) { sk = cand; bestBad = bad; if (bad === 0) break; }
+  }
+  if (ko.length) {
+    sk.segs.forEach(sg => { sg.hidden = (sg.parent != null && sk.segs[sg.parent].hidden) || violates(sg); });
+    sk.tips.forEach(t => {
+      t.cut = sk.segs[t.seg].hidden;
+      if (!t.cut) for (const [pt, , view] of ko) if (view && pt.distanceTo(t.pos) < 1.45 * scale) { t.cut = true; break; }
+    });
+  }
+  const R = mulberry(o.seed * 7 + 3);
+  const group = new THREE.Group(); group.position.copy(o.base);
+
+  const bark = nearCut(lambert('#6f665c'));
+  const unit = new THREE.CylinderGeometry(0.6, 1, 1, 6, 1); unit.translate(0, 0.5, 0);
+  const segMeshes = sk.segs.filter(s => !s.hidden).map(s => {
+    const m = new THREE.Mesh(unit, bark);
+    m.position.copy(s.start); m.quaternion.setFromUnitVectors(UP, s.dir); m.userData.s = s;
+    group.add(m); return m;
+  });
+  const tips = sk.tips.filter(t => !t.cut);
+
+  const leafCols = ['#5f8f4e', '#6e9c55', '#4f7f45', '#7aa65e'].map(c => new THREE.Color(c));
+  const fol = [];
+  tips.forEach((t, ti) => {
+    for (let k = 0; k < 2; k++) {
+      const p = t.pos.clone().add(randUnit(R).multiplyScalar(0.45 * scale)).addScaledVector(UP, 0.12 * scale);
+      fol.push({ p, s: (0.72 + R() * 0.5) * scale, sy: 0.68 + R() * 0.16, rot: new THREE.Euler(R() * 3, R() * 3, R() * 3), tip: ti, color: leafCols[Math.floor(R() * leafCols.length)] });
+    }
+  });
+  const folMesh = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 0), nearCut(lambert('#ffffff')), fol.length);
+  fol.forEach((f, i) => folMesh.setColorAt(i, f.color));
+  folMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+
+  const bl = [];
+  tips.forEach((t, ti) => {
+    const out = V3(t.pos.x, 0, t.pos.z).normalize().multiplyScalar(0.8).add(UP).normalize();
+    for (let k = 0; k < 34; k++) {
+      let n = randUnit(R), guard = 0;
+      while (n.dot(out) < -0.25 && guard++ < 20) n = randUnit(R);
+      n.lerp(out, 0.2).normalize();
+      const p = t.pos.clone().addScaledVector(n, (1.02 + R() * 0.36) * scale).addScaledVector(UP, 0.14 * scale);
+      const q = new THREE.Quaternion().setFromUnitVectors(ZF, n).multiply(new THREE.Quaternion().setFromAxisAngle(ZF, R() * Math.PI * 2));
+      bl.push({ p, n, q, s: (0.25 + R() * 0.12) * scale, tip: ti, bloom: 1, target: 1, delay: 0, speed: 1.5 + R() * 0.7, phase: R() * Math.PI * 2, axis: randUnit(R) });
+    }
+  });
+  const blMesh = new THREE.InstancedMesh(FLOWER_GEO, TREE_FLOWER_MAT, bl.length); blMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  const budMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 6, 5), nearCut(lambert('#dfe8c4', { emissive: new THREE.Color('#1c2012') })), bl.length);
+  budMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  group.add(folMesh, blMesh, budMesh);
+  [folMesh, blMesh, budMesh].forEach(m => { m.frustumCulled = false; });
+
+  const shadow = new THREE.Mesh(new THREE.CircleGeometry(4.6 * scale, 28), new THREE.MeshBasicMaterial({ color: 0x1d2a1c, transparent: true, opacity: 0.2, depthWrite: false }));
+  shadow.rotation.x = -Math.PI / 2; shadow.position.y = 0.06; group.add(shadow);
+
+  const T = {
+    group, segMeshes, tips, fol, folMesh, bl, blMesh, budMesh, scale, keyBuds: [],
+    growth: 1, budsOn: false, tremble: 0, prevTr: 0, dirty: true, folScale: 1, folTint: 0,
+    setGrowth(g) {
+      this.growth = g; this.dirty = true;
+      for (const m of segMeshes) {
+        const s = m.userData.s, k = clamp((g - s.birth) / s.dur, 0, 1), e = E.out(k);
+        m.visible = k > 0.001;
+        m.scale.set(s.rad * (0.35 + 0.65 * e), s.len * Math.max(e, 0.001), s.rad * (0.35 + 0.65 * e));
+      }
+    },
+    tipVis(ti) { return E.out(clamp((this.growth - tips[ti].birth) / 0.12, 0, 1)); },
+    setBloomAll(v, instant) { for (const b of bl) { b.target = v; b.delay = 0; if (instant) b.bloom = v; } this.dirty = true; },
+    bloomTip(ti, center) {
+      for (const b of bl) if (b.tip === ti && b.target < 1) { b.target = 1; b.delay = center ? b.p.distanceTo(center) * 0.22 : Math.random() * 0.4; }
+      this.dirty = true;
+    },
+    bloomRest(maxDelay) { for (const b of bl) if (b.target < 1) { b.target = 1; b.delay = 0.2 + Math.random() * maxDelay; } this.dirty = true; },
+    bloomedCount() { let n = 0; for (const b of bl) if (b.target === 1) n++; return n; },
+    detachRandom() {
+      const c = [];
+      for (const b of bl) if (b.target === 1 && b.bloom > 0.9) c.push(b);
+      if (!c.length) return null;
+      const b = c[Math.floor(Math.random() * c.length)];
+      b.target = 0; b.bloom = 0; this.dirty = true;
+      return b;
+    },
+    setFoliageTint(mix, color) {
+      this.folTint = mix; const tc = color || new THREE.Color('#d8ac46');
+      fol.forEach((f, i) => { TMPC.copy(f.color).lerp(tc, mix); folMesh.setColorAt(i, TMPC); });
+      if (folMesh.instanceColor) folMesh.instanceColor.needsUpdate = true;
+    },
+    update(dt, time) {
+      let animating = false;
+      for (const b of bl) {
+        if (b.bloom === b.target) continue;
+        animating = true;
+        if (b.delay > 0) { b.delay -= dt; continue; }
+        b.bloom = b.target > b.bloom ? Math.min(b.target, b.bloom + dt * b.speed) : Math.max(b.target, b.bloom - dt * 3);
+      }
+      const tr = this.tremble;
+      group.rotation.z = Math.sin(time * 0.6) * 0.004 + (tr > 0.01 ? Math.sin(time * 23) * 0.006 * tr : 0);
+      group.rotation.x = Math.sin(time * 0.47) * 0.003;
+      for (const kb of this.keyBuds) kb.update(time);
+      if (!(animating || this.dirty || tr > 0.004 || this.prevTr > 0.004)) return;
+      this.prevTr = tr;
+      for (let i = 0; i < bl.length; i++) {
+        const b = bl[i], vis = this.tipVis(b.tip);
+        const s = b.bloom > 0 ? b.s * Math.max(0, E.outBack(clamp(b.bloom, 0, 1))) * vis : 0;
+        if (s <= 1e-4) { TMPM.makeScale(0, 0, 0); }
+        else {
+          TMPQ.copy(b.q);
+          if (tr > 0.004) { TMPQ2.setFromAxisAngle(b.axis, Math.sin(time * (15 + b.phase * 3) + b.phase * 7) * 0.5 * tr); TMPQ.premultiply(TMPQ2); }
+          TMPM.compose(b.p, TMPQ, TMPS.setScalar(s));
+        }
+        blMesh.setMatrixAt(i, TMPM);
+        const bs = this.budsOn ? 0.075 * scale * (1 - sstep(0, 0.35, b.bloom)) * vis : 0;
+        TMPM.makeScale(bs, bs, bs); TMPM.setPosition(b.p); budMesh.setMatrixAt(i, TMPM);
+      }
+      blMesh.instanceMatrix.needsUpdate = true; budMesh.instanceMatrix.needsUpdate = true;
+      for (let i = 0; i < fol.length; i++) {
+        const f = fol[i], vis = this.tipVis(f.tip) * this.folScale, jig = tr > 0.004 ? Math.sin(time * 19 + i) * 0.07 * tr : 0;
+        TMPE.set(f.rot.x + jig, f.rot.y, f.rot.z + jig);
+        TMPM.compose(f.p, TMPQ.setFromEuler(TMPE), TMPS.set(f.s * vis + 1e-4, f.s * f.sy * vis + 1e-4, f.s * vis + 1e-4));
+        folMesh.setMatrixAt(i, TMPM);
+      }
+      folMesh.instanceMatrix.needsUpdate = true;
+      this.dirty = false;
+    }
+  };
+  T.setGrowth(1);
+  return T;
+}
+
+/* 第一幕要「慎重開花」的花苞：分散在玩家四周，逼玩家轉頭找 */
+function makeKeyBuds(tree, viewPos, fwdYaw, n) {
+  const base = tree.group.position;
+  const cands = tree.tips.map((t, ti) => {
+    const wp = t.pos.clone().add(base), d = TMPV.subVectors(wp, viewPos), dist = d.length();
+    return { ti, wp, dist, yaw: Math.atan2(-d.x, -d.z), pitch: Math.asin(clamp(d.y / dist, -1, 1)) };
+  }).filter(c => c.dist > 1.6 && c.dist < 6.8 && c.pitch > -0.85 && c.pitch < 0.95);
+  cands.forEach(c => { c.rel = wrapAngle(c.yaw - fwdYaw); });
+  const chosen = [];
+  if (cands.length) {
+    cands.sort((a, b) => Math.abs(a.rel) - Math.abs(b.rel));
+    chosen.push(cands.shift());
+    while (chosen.length < n && cands.length) {
+      let best = 0, bestScore = -1;
+      cands.forEach((c, i) => { const m = Math.min(...chosen.map(h => Math.abs(wrapAngle(h.yaw - c.yaw)))); if (m > bestScore) { bestScore = m; best = i; } });
+      chosen.push(cands.splice(best, 1)[0]);
+    }
+  }
+  const geo = new THREE.SphereGeometry(0.17, 12, 10);
+  tree.keyBuds = chosen.map(c => {
+    const t = tree.tips[c.ti];
+    const toCam = viewPos.clone().sub(base).sub(t.pos).normalize();
+    const local = t.pos.clone().addScaledVector(toCam, 1.08 * tree.scale).addScaledVector(UP, 0.1);
+    const mesh = new THREE.Mesh(geo, lambert('#e3ebc6', { emissive: new THREE.Color('#2a2c14') }));
+    mesh.scale.set(1, 1.35, 1); mesh.position.copy(local);
+    const glow = makeGlow('#ffcf6a', 1.6, 0); glow.position.copy(local);
+    tree.group.add(mesh, glow);
+    const kb = {
+      tip: c.ti, local, wpos: local.clone().add(base), mesh, glow, state: 'idle', wob: 0,
+      update(time) {
+        mesh.visible = this.state !== 'done';
+        const target = this.state === 'ready' ? 0.85 + Math.sin(time * 4) * 0.25 : 0;
+        glow.material.opacity += (target - glow.material.opacity) * 0.15;
+        glow.visible = glow.material.opacity > 0.01;
+        if (this.wob > 0) { this.wob = Math.max(0, this.wob - 0.03); mesh.rotation.z = Math.sin(time * 40) * 0.35 * this.wob; } else mesh.rotation.z = 0;
+      }
+    };
+    kb.mesh.visible = false;
+    return kb;
+  });
+}
+
+/* ---------- 飄落系統：落花、落葉，落地後鋪成一地 ---------- */
+class Fall {
+  constructor(geo, mat, max, groundMax, scene) {
+    this.mesh = new THREE.InstancedMesh(geo, mat, max); this.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage); this.mesh.count = 0; this.mesh.frustumCulled = false;
+    this.ground = new THREE.InstancedMesh(geo, mat, Math.max(1, groundMax)); this.ground.count = 0; this.ground.frustumCulled = false;
+    this.items = []; this.max = max; this.groundMax = groundMax; this.gIdx = 0; this.gCount = 0;
+    this.rate = 0; this.acc = 0; this.source = null; this.wind = V3(0.22, 0, 0.12); this.gust = 0; this.terminal = 1.15;
+    scene.add(this.mesh, this.ground);
+  }
+  spawn(p, s, q, v) {
+    if (this.items.length >= this.max) return null;
+    const it = {
+      p: p.clone(), v: v ? v.clone() : V3((Math.random() - 0.5) * 0.3, -0.2 - Math.random() * 0.2, (Math.random() - 0.5) * 0.3),
+      q: q ? q.clone() : new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.random() * 6, Math.random() * 6, 0)),
+      axis: V3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize(), spin: 1.4 + Math.random() * 2.4,
+      s, phase: Math.random() * 6.28, gy: groundAt(p.x, p.z), gt: 0
+    };
+    this.items.push(it); return it;
+  }
+  update(dt, time) {
+    if (this.rate > 0 && this.source) {
+      this.acc += dt * this.rate;
+      while (this.acc >= 1) { this.acc -= 1; const src = this.source(); if (src) this.spawn(src.p, src.s, src.q, src.v); }
+    }
+    const gust = 1 + this.gust;
+    for (let i = this.items.length - 1; i >= 0; i--) {
+      const it = this.items[i];
+      it.v.y = Math.max(-this.terminal, it.v.y - 0.5 * dt);
+      it.p.x += (it.v.x + this.wind.x * gust + Math.sin(time * 1.6 + it.phase) * 0.35) * dt;
+      it.p.y += it.v.y * dt;
+      it.p.z += (it.v.z + this.wind.z * gust + Math.cos(time * 1.3 + it.phase) * 0.3) * dt;
+      it.v.x *= 1 - dt * 0.6; it.v.z *= 1 - dt * 0.6;
+      TMPQ.setFromAxisAngle(it.axis, it.spin * dt); it.q.premultiply(TMPQ);
+      it.gt -= dt; if (it.gt <= 0) { it.gy = groundAt(it.p.x, it.p.z); it.gt = 1.0; }
+      if (it.p.y <= it.gy + 0.04) { this.land(it); this.items.splice(i, 1); }
+    }
+    for (let i = 0; i < this.items.length; i++) { const it = this.items[i]; TMPM.compose(it.p, it.q, TMPS.setScalar(it.s)); this.mesh.setMatrixAt(i, TMPM); }
+    this.mesh.count = this.items.length; this.mesh.instanceMatrix.needsUpdate = true;
+  }
+  land(it) {
+    if (!this.groundMax) return;
+    const idx = this.gIdx % this.groundMax; this.gIdx++; this.gCount = Math.min(this.groundMax, this.gCount + 1);
+    TMPQ.setFromUnitVectors(ZF, UP); TMPQ2.setFromAxisAngle(UP, Math.random() * 6.28); TMPQ.premultiply(TMPQ2);
+    TMPE.set((Math.random() - 0.5) * 0.3, 0, (Math.random() - 0.5) * 0.3); TMPQ2.setFromEuler(TMPE); TMPQ.premultiply(TMPQ2);
+    TMPM.compose(TMPV.set(it.p.x, it.gy + 0.035, it.p.z), TMPQ, TMPS.setScalar(it.s));
+    this.ground.setMatrixAt(idx, TMPM); this.ground.count = this.gCount; this.ground.instanceMatrix.needsUpdate = true;
+  }
+  pick(x, y, radius) {
+    let best = null, bd = radius * radius;
+    for (const it of this.items) {
+      const sp = toScreen(it.p); if (!sp.on) continue;
+      const dx = sp.x - x, dy = sp.y - y, d = dx * dx + dy * dy;
+      if (d < bd) { bd = d; best = it; }
+    }
+    return best;
+  }
+  nearestOnScreen() {
+    let best = null, bd = Infinity; const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+    for (const it of this.items) { const sp = toScreen(it.p); if (!sp.on) continue; const d = Math.hypot(sp.x - cx, sp.y - cy); if (d < bd) { bd = d; best = it; } }
+    return best;
+  }
+  remove(it) { const i = this.items.indexOf(it); if (i >= 0) this.items.splice(i, 1); }
+  clear() { this.items.length = 0; this.mesh.count = 0; this.rate = 0; this.acc = 0; this.gust = 0; }
+  clearGround() { this.gIdx = 0; this.gCount = 0; this.ground.count = 0; }
+}
+
+/* ---------- 旅人 ---------- */
+function buildTraveler() {
+  const g = new THREE.Group();
+  const coat = lambert('#46606f'), pants = lambert('#2c333a'), skin = lambert('#e4c09e'), hair = lambert('#2a2320'), shoe = lambert('#1e2226');
+  const legGeo = new THREE.CylinderGeometry(0.075, 0.065, 0.9, 6); legGeo.translate(0, -0.45, 0);
+  const mkLeg = x => { const p = new THREE.Group(); p.position.set(x, 0.93, 0); p.add(new THREE.Mesh(legGeo, pants)); const s = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.07, 0.25), shoe); s.position.set(0, -0.9, 0.04); p.add(s); g.add(p); return p; };
+  const legL = mkLeg(0.11), legR = mkLeg(-0.11);
+  const body = new THREE.Group(); g.add(body);
+  const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.26, 0.72, 8), coat); torso.position.y = 1.29; body.add(torso);
+  const hem = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.31, 0.26, 8), coat); hem.position.y = 0.88; body.add(hem);
+  const armGeo = new THREE.CylinderGeometry(0.06, 0.055, 0.58, 6); armGeo.translate(0, -0.29, 0);
+  const mkArm = x => { const p = new THREE.Group(); p.position.set(x, 1.6, 0); p.add(new THREE.Mesh(armGeo, coat)); const h = new THREE.Mesh(new THREE.SphereGeometry(0.055, 6, 5), skin); h.position.y = -0.6; p.add(h); body.add(p); return p; };
+  const armL = mkArm(0.25), armR = mkArm(-0.25);
+  const neck = new THREE.Group(); neck.position.set(0, 1.66, 0); body.add(neck);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.15, 12, 10), skin); head.position.y = 0.17; neck.add(head);
+  const hairM = new THREE.Mesh(new THREE.SphereGeometry(0.158, 12, 8, 0, Math.PI * 2, 0, Math.PI * 0.56), hair); hairM.position.set(0, 0.19, -0.01); hairM.rotation.x = -0.28; neck.add(hairM);
+  const book = new THREE.Group();
+  const cover = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.025, 0.24), lambert('#8b3b3f')); const pages = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.03, 0.22), lambert('#efe8da')); pages.position.y = 0.02;
+  book.add(cover, pages); book.position.set(0, 1.18, 0.36); book.rotation.x = -0.55; body.add(book);
+  const umb = new THREE.Group();
+  const canopy = new THREE.Mesh(new THREE.ConeGeometry(0.9, 0.34, 10, 1, true), lambert('#2f3b46', { side: THREE.DoubleSide })); canopy.position.y = 2.28;
+  const stick = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 1.15, 4), lambert('#222222')); stick.position.y = 1.72;
+  umb.add(canopy, stick); umb.position.set(0, 0, 0.2); umb.rotation.x = 0.3; umb.visible = false; body.add(umb);
+  const letter = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.012, 0.15), lambert('#f3eee2')); letter.position.set(0.12, 1.14, 0.32); letter.rotation.x = -0.7; letter.visible = false; body.add(letter);
+  const flower = new THREE.Mesh(FLOWER_GEO, FLOWER_MAT); flower.scale.setScalar(0.12); flower.position.set(0.2, 1.62, -0.02); flower.rotation.set(-1.2, 0.4, 0); flower.visible = false; body.add(flower);
+  const sh = new THREE.Mesh(new THREE.CircleGeometry(0.42, 16), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.22, depthWrite: false }));
+  sh.rotation.x = -Math.PI / 2; sh.position.y = 0.03; g.add(sh);
+  return { g, body, legL, legR, armL, armR, neck, head, book, umb, letter, flower, phase: 0, u: 0, speed: 0, headPitch: 0.5, pose: 'read', lastStep: 0, onStep: null };
+}
+function setTravelerPose(T, pose) {
+  T.pose = pose;
+  T.book.visible = pose === 'read' || pose === 'think';
+  T.umb.visible = pose === 'umbrella';
+  T.letter.visible = pose === 'letter';
+  T.headPitch = pose === 'umbrella' ? 0.35 : pose === 'letter' ? 0.15 : pose === 'think' ? 0.25 : pose === 'up' ? -0.55 : 0.5;
+}
+function animTraveler(T, dt) {
+  const a = Math.min(1, T.speed / 1.2);
+  T.phase += dt * Math.max(0.0001, T.speed) * 4.4;
+  const s = Math.sin(T.phase);
+  T.legL.rotation.x = s * 0.55 * a; T.legR.rotation.x = -s * 0.55 * a;
+  T.body.position.y = Math.abs(Math.cos(T.phase)) * 0.035 * a;
+  const holding = T.pose === 'read' || T.pose === 'think' || T.pose === 'letter';
+  T.armL.rotation.set(holding ? -0.95 : (T.pose === 'umbrella' ? -0.4 : 0.3 * s * a), 0, holding ? -0.25 : 0);
+  T.armR.rotation.set(T.pose === 'umbrella' ? -2.0 : holding ? -0.95 : -0.3 * s * a, 0, holding ? 0.25 : 0);
+  T.neck.rotation.x += (T.headPitch - T.neck.rotation.x) * Math.min(1, dt * 3);
+  const stepPhase = Math.floor(T.phase / Math.PI);
+  if (stepPhase !== T.lastStep) { T.lastStep = stepPhase; if (T.onStep && a > 0.05) T.onStep(); }
+}
+function placeTraveler(T) {
+  const u = clamp(T.u, 0, 1), p = PATH.getPointAt(u), tan = PATH.getTangentAt(u);
+  T.g.position.set(p.x + tan.z * 0.3, p.y + 0.075, p.z - tan.x * 0.3);
+  T.g.lookAt(T.g.position.x + tan.x, T.g.position.y, T.g.position.z + tan.z);
+}
+const travelerHead = T => { T.g.updateMatrixWorld(true); return T.g.localToWorld(V3(0, 1.85, 0)); };
+
+/* ---------- 鳥、鳥巢、野花、雨 ---------- */
+function buildBird() {
+  const g = new THREE.Group(), mat = lambert('#f6f5ef', { side: THREE.DoubleSide, emissive: new THREE.Color('#3a3a36') });
+  const body = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.5, 7), mat); body.rotation.x = Math.PI / 2; g.add(body);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.09, 8, 6), mat); head.position.set(0, 0.05, 0.24); g.add(head);
+  const beak = new THREE.Mesh(new THREE.ConeGeometry(0.025, 0.09, 4), lambert('#d9a441')); beak.rotation.x = Math.PI / 2; beak.position.set(0, 0.04, 0.35); g.add(beak);
+  const wg = new THREE.BufferGeometry(); wg.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0.12, 0.64, 0.02, -0.06, 0, 0, -0.18], 3)); wg.computeVertexNormals();
+  const wl = new THREE.Group(), wr = new THREE.Group(); wl.add(new THREE.Mesh(wg, mat)); const m2 = new THREE.Mesh(wg, mat); m2.scale.x = -1; wr.add(m2); g.add(wl, wr);
+  const tail = new THREE.Mesh(new THREE.ConeGeometry(0.09, 0.22, 3), mat); tail.rotation.x = -Math.PI / 2; tail.position.z = -0.3; tail.scale.y = 0.3; g.add(tail);
+  const glow = makeGlow('#fff6dc', 1.4, 0.5); g.add(glow);
+  return { g, wl, wr, t: 0, flap: 1 };
+}
+function buildNest() {
+  const g = new THREE.Group();
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(0.24, 0.09, 6, 12), lambert('#7a5c3c')); ring.rotation.x = Math.PI / 2; g.add(ring);
+  const bird = new THREE.Mesh(new THREE.SphereGeometry(0.14, 8, 6), lambert('#8a6e52')); bird.position.y = 0.12; bird.scale.set(1, 0.85, 1.3); g.add(bird);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 6), lambert('#8a6e52')); head.position.set(0, 0.24, 0.12); g.add(head);
+  const beak = new THREE.Mesh(new THREE.ConeGeometry(0.02, 0.07, 4), lambert('#d9a441')); beak.rotation.x = Math.PI / 2; beak.position.set(0, 0.24, 0.22); g.add(beak);
+  g.visible = false; return g;
+}
+function buildWildflowers() {
+  const COUNT = 240, mesh = new THREE.InstancedMesh(FLOWER_GEO, lambert('#ffffff', { vertexColors: true, side: THREE.DoubleSide }), COUNT);
+  const R = mulberry(91), tints = ['#f2d14b', '#c7b2ef', '#ffffff', '#f6a6b8'].map(c => new THREE.Color(c)), data = [];
+  let n = 0, guard = 0;
+  while (n < COUNT && guard++ < 5000) {
+    const a = R() * 6.28, r = 1.4 + Math.sqrt(R()) * 9, x = TREE.x + Math.cos(a) * r, z = TREE.z + Math.sin(a) * r;
+    const np = nearestOnPath(x, z); if (np.d < 1.4) continue;
+    data.push({ p: V3(x, terrainHeight(x, z, np) + 0.15, z), s: 0.09 + R() * 0.07, d: R() * 2.2, q: new THREE.Quaternion().setFromUnitVectors(ZF, UP).premultiply(new THREE.Quaternion().setFromAxisAngle(UP, R() * 6.28)) });
+    mesh.setColorAt(n, tints[Math.floor(R() * tints.length)]); n++;
+  }
+  mesh.count = n; if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true; mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  const W2 = { mesh, data, grow: 0, set(v) { this.grow = v; data.forEach((d, i) => { const k = E.outBack(clamp((v * 3 - d.d) / 0.8, 0, 1)); TMPM.compose(d.p, d.q, TMPS.setScalar(Math.max(1e-4, d.s * k))); mesh.setMatrixAt(i, TMPM); }); mesh.instanceMatrix.needsUpdate = true; mesh.visible = v > 0; } };
+  W2.set(0);
+  return W2;
+}
+function buildRain() {
+  const N = 1300, pos = new Float32Array(N * 6), geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const lines = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ color: new THREE.Color('#d2dade'), transparent: true, opacity: 0.42, fog: false }));
+  lines.frustumCulled = false; lines.visible = false;
+  const drops = [];
+  for (let i = 0; i < N; i++) drops.push({ x: (Math.random() - 0.5) * 30, y: Math.random() * 18 - 4, z: (Math.random() - 0.5) * 30, v: 15 + Math.random() * 6 });
+  return {
+    lines, drops,
+    update(dt, c) {
+      for (let i = 0; i < N; i++) {
+        const d = drops[i]; d.y -= d.v * dt;
+        if (d.y < -5) { d.y += 22; d.x = (Math.random() - 0.5) * 30; d.z = (Math.random() - 0.5) * 30; }
+        const o = i * 6, x = c.x + d.x, y = c.y + d.y, z = c.z + d.z;
+        pos[o] = x; pos[o + 1] = y; pos[o + 2] = z; pos[o + 3] = x + 0.05; pos[o + 4] = y + 0.55; pos[o + 5] = z + 0.08;
+      }
+      geo.attributes.position.needsUpdate = true;
+    }
+  };
+}
+
+/* ---------- 組裝戶外世界 ---------- */
+function buildWorld() {
+  parseMoods();
+  FLOWER_GEO = makeFlowerGeo();
+  FLOWER_MAT = new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide, emissive: new THREE.Color('#2b2827') });
+  TREE_FLOWER_MAT = nearCut(new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide, emissive: new THREE.Color('#2b2827') }));
+  const s = new THREE.Scene(); W.scene = s;
+  s.fog = new THREE.Fog(0xd9e5e0, 60, 960);
+  W.sky = makeSky(); s.add(W.sky);
+  W.hemi = new THREE.HemisphereLight(0xffffff, 0x556644, 0.9); s.add(W.hemi);
+  W.sun = new THREE.DirectionalLight(0xffffff, 1); s.add(W.sun); s.add(W.sun.target);
+  s.add(new THREE.AmbientLight(0xffffff, 0.05));
+  buildPath();
+  s.add(buildTerrain());
+  s.add(buildPathMesh());
+  s.add(buildMountains());
+  s.add(buildGrass());
+  s.add(buildForest());
+
+  TREE_BASE = groundAt(TREE.x, TREE.z);
+  U_TREE = nearestOnPath(TREE.x, TREE.z).u;
+  let farI = 0, farBest = Infinity;
+  PATH_SAMPLES.forEach((p, i) => { const d = Math.abs(p.z - (TREE.z - 46)); if (d < farBest) { farBest = d; farI = i; } });
+  U_FAR = farI / (PATH_SAMPLES.length - 1);
+  TREE_CAM.set(TREE.x - 2.8, TREE_BASE + 5.2, TREE.z - 0.6);
+  const farP = PATH.getPointAt(U_FAR);
+  TREE_FWD.set(farP.x, farP.y + 1.2, farP.z);
+  const viewDir = TREE_FWD.clone().sub(TREE_CAM).normalize();
+  const pathPt = (du, h) => { const p = PATH.getPointAt(clamp(U_TREE + du / PATH_LEN, 0, 1)); return V3(p.x, p.y + h, p.z).sub(TREE_CAM); };
+  W.riseStart = V3(TREE.x - 1.6, TREE_BASE + 0.45, TREE.z - 0.5);
+  W.tree = buildTungTree({
+    seed: 7, base: V3(TREE.x, TREE_BASE, TREE.z), scale: 1,
+    view: { pos: TREE_CAM, dirs: [viewDir, pathPt(22, 1.2), pathPt(0, 1.0), pathPt(-8, 1.6)], cone: 0.28, len: 8, rise: W.riseStart }
+  });
+  s.add(W.tree.group);
+  makeKeyBuds(W.tree, TREE_CAM, Math.atan2(-viewDir.x, -viewDir.z), 7);
+
+  W.fall = new Fall(FLOWER_GEO, FLOWER_MAT, 320, 1100, s);
+  W.srcDetach = () => {
+    const b = W.tree.detachRandom();
+    return b ? { p: b.p.clone().applyQuaternion(W.tree.group.quaternion).add(W.tree.group.position), s: b.s, q: b.q } : null;
+  };
+  W.srcGentle = () => {
+    const bl = W.tree.bl, b = bl[Math.floor(Math.random() * bl.length)];
+    return b.bloom > 0.9 ? { p: b.p.clone().add(W.tree.group.position).addScaledVector(b.n, 0.15), s: b.s, q: b.q } : null;
+  };
+  const vF = V3(), vR = V3();
+  W.srcView = () => {
+    const b = W.tree.detachRandom();
+    if (!b) return null;
+    camera.getWorldDirection(vF); vR.crossVectors(vF, UP).normalize();
+    const p = camera.position.clone().addScaledVector(vF, 2.6 + Math.random() * 2.6).addScaledVector(vR, (Math.random() - 0.5) * 4.2).addScaledVector(UP, 1.5 + Math.random() * 1.1);
+    return { p, s: b.s * 1.15, q: b.q };
+  };
+  W.fall.source = W.srcDetach;
+  W.leafFall = new Fall(makeLeafGeo(), lambert('#d6a943', { side: THREE.DoubleSide }), 180, 500, s);
+  W.leafFall.source = () => {
+    const f = W.tree.fol[Math.floor(Math.random() * W.tree.fol.length)];
+    return { p: f.p.clone().add(randUnit(Math.random).multiplyScalar(f.s)).add(W.tree.group.position), s: 0.14 + Math.random() * 0.06 };
+  };
+  W.trav = buildTraveler(); W.trav.g.visible = false; s.add(W.trav.g);
+  W.rain = buildRain(); s.add(W.rain.lines);
+  W.bird = buildBird(); W.bird.g.visible = false; s.add(W.bird.g);
+  W.nest = buildNest(); s.add(W.nest);
+  const nestTip = W.tree.tips.reduce((a, t) => (t.pos.y < a.pos.y && t.pos.length() > 2 ? t : a), W.tree.tips[0]);
+  W.nest.position.copy(nestTip.pos).add(W.tree.group.position).add(V3(0, -0.55, 0));
+  W.wild = buildWildflowers(); s.add(W.wild.mesh);
+  setMood('may', 0);
+}
+
+function resetWorld(o = {}) {
+  W.timeScale = 1;
+  NEAR.value = o.near || 0;
+  const t = W.tree;
+  t.setGrowth(o.growth == null ? 1 : o.growth);
+  t.setBloomAll(o.bloom == null ? 1 : o.bloom, true);
+  t.budsOn = !!o.buds; t.tremble = 0; t.folScale = 1; t.setFoliageTint(0); t.dirty = true;
+  t.keyBuds.forEach(kb => { kb.state = o.keyBuds ? 'idle' : 'done'; kb.glow.material.opacity = 0; });
+  W.fall.clear(); W.fall.clearGround(); W.fall.terminal = 1.15; W.fall.source = W.srcDetach; W.fall.wind.set(0.22, 0, 0.12);
+  W.leafFall.clear(); W.leafFall.clearGround();
+  setMood(o.mood || 'may', 0);
+  $('#stage').classList.toggle('grey', !!o.grey);
+  const T = W.trav;
+  T.g.visible = !!o.traveler; T.u = o.travelerU == null ? U_FAR : o.travelerU; T.speed = 0; T.onStep = null; T.free = false;
+  setTravelerPose(T, o.pose || 'read'); T.neck.rotation.x = T.headPitch; T.flower.visible = false;
+  if (T.g.visible) { placeTraveler(T); animTraveler(T, 0); }
+  W.rain.lines.visible = !!o.rain;
+  W.bird.g.visible = false; W.nest.visible = false; W.wild.set(0);
+  LOOK.on = false; LOOK.tzoom = LOOK.zoom = 1; LOOK.shake = 0;
+}
+
+function updateWorld(dt, time) {
+  stepMood(dt);
+  W.sky.position.copy(camera.position);
+  W.tree.update(dt, time);
+  W.fall.update(dt, time);
+  W.leafFall.update(dt, time);
+  const T = W.trav;
+  if (T.g.visible) { if (!T.free) T.u = clamp(T.u + (T.speed * dt) / PATH_LEN, 0, 1); animTraveler(T, dt); if (!T.free) placeTraveler(T); }
+  if (W.rain.lines.visible) W.rain.update(dt, camera.position);
+  if (W.bird.g.visible) { W.bird.t += dt; const f = Math.sin(W.bird.t * 11) * 0.75 * W.bird.flap; W.bird.wl.rotation.z = f; W.bird.wr.rotation.z = -f; }
+}
+
+/* ---------- 視角控制：第一人稱定點環顧 ---------- */
+const LOOK = { on: false, yaw: 0, pitch: 0, ty: 0, tp: 0, minP: -1.25, maxP: 1.15, pos: null, zoom: 1, tzoom: 1, shake: 0 };
+function yawPitch(from, to) { const d = TMPV.subVectors(to, from).normalize(); return { yaw: Math.atan2(-d.x, -d.z), pitch: Math.asin(clamp(d.y, -1, 1)) }; }
+function setLook(pos, target) {
+  if (!LOOK.pos) LOOK.pos = V3();
+  LOOK.pos.copy(pos);
+  const yp = yawPitch(pos, target);
+  LOOK.yaw = LOOK.ty = yp.yaw; LOOK.pitch = LOOK.tp = yp.pitch;
+  camera.position.copy(pos); camera.rotation.set(LOOK.pitch, LOOK.yaw, 0, 'YXZ');
+}
+function lookFromCamera() {
+  if (!LOOK.pos) LOOK.pos = V3();
+  const d = camera.getWorldDirection(TMPV);
+  LOOK.yaw = LOOK.ty = Math.atan2(-d.x, -d.z); LOOK.pitch = LOOK.tp = Math.asin(clamp(d.y, -1, 1));
+  LOOK.pos.copy(camera.position);
+}
+function baseFov() { const a = camera.aspect; return a >= 1 ? 58 : 58 + (1 - a) * 36; }
+function applyFov(force) { const f = baseFov() * LOOK.zoom; if (force || Math.abs(camera.fov - f) > 0.01) { camera.fov = f; camera.updateProjectionMatrix(); } }
+function updateLook(dt) {
+  LOOK.zoom += (LOOK.tzoom - LOOK.zoom) * Math.min(1, dt * 3);
+  applyFov();
+  if (!LOOK.on) return;
+  LOOK.tp = clamp(LOOK.tp, LOOK.minP, LOOK.maxP);
+  LOOK.yaw += wrapAngle(LOOK.ty - LOOK.yaw) * Math.min(1, dt * 12);
+  LOOK.pitch += (LOOK.tp - LOOK.pitch) * Math.min(1, dt * 12);
+  if (Math.abs(LOOK.yaw) > 20) { const k = Math.round(LOOK.yaw / (Math.PI * 2)) * Math.PI * 2; LOOK.yaw -= k; LOOK.ty -= k; }
+  camera.position.copy(LOOK.pos);
+  let sx = 0, sy = 0;
+  if (LOOK.shake > 0 && !REDUCED) { sx = (Math.random() - 0.5) * LOOK.shake * 0.018; sy = (Math.random() - 0.5) * LOOK.shake * 0.018; }
+  camera.rotation.set(LOOK.pitch + sy, LOOK.yaw + sx, 0, 'YXZ');
+}
+function toScreen(p) {
+  TMPV.copy(p).project(camera);
+  const on = TMPV.z > -1 && TMPV.z < 1 && Math.abs(TMPV.x) < 1.15 && Math.abs(TMPV.y) < 1.15;
+  return { x: (TMPV.x * 0.5 + 0.5) * window.innerWidth, y: (-TMPV.y * 0.5 + 0.5) * window.innerHeight, on, inView: on && Math.abs(TMPV.x) < 0.92 && Math.abs(TMPV.y) < 0.9, behind: TMPV.z >= 1 };
+}
+/* 相機運鏡：從目前位置平滑移到新位置、看向新目標 */
+function camMove(dur, toPos, toTarget, ease = E.inOut) {
+  const fromPos = camera.position.clone(), fromDir = camera.getWorldDirection(V3()).clone();
+  const fromTarget = fromPos.clone().add(fromDir.multiplyScalar(toPos.distanceTo(toTarget) || 10));
+  const tgt = V3();
+  return tween(dur, e => {
+    camera.position.lerpVectors(fromPos, toPos, e);
+    tgt.lerpVectors(fromTarget, toTarget, e);
+    camera.lookAt(tgt);
+  }, ease);
+}
+
+/* ---- 20-temple.js ---- */
+/* ===================== 序章：古寺與五百盞蓮燈 ===================== */
+const TEMPLE = {};
+function makeLotusGeo() {
+  const pos = [], col = [], idx = [];
+  const cIn = new THREE.Color('#e9a3b0'), cOut = new THREE.Color('#fbe9ec'), cTip = new THREE.Color('#ffffff');
+  const rows = [[0.08, 0.06, 0.0, cIn], [0.35, 0.2, 0.12, cOut], [0.62, 0.2, 0.34, cOut], [0.74, 0.06, 0.52, cTip]];
+  for (let ring = 0; ring < 2; ring++) {
+    const n = 8, sc = ring === 0 ? 1 : 0.7, off = ring * 0.39;
+    for (let p = 0; p < n; p++) {
+      const a = (p / n) * Math.PI * 2 + off, dx = Math.cos(a), dz = Math.sin(a), px = -dz, pz = dx, b = pos.length / 3;
+      rows.forEach(([r, hw, lift, c], ri) => {
+        const cx = dx * r * sc, cz = dz * r * sc, y = lift * sc * (ring === 0 ? 1 : 1.25);
+        pos.push(cx + px * hw * sc, y, cz + pz * hw * sc, cx - px * hw * sc, y, cz - pz * hw * sc);
+        col.push(c.r, c.g, c.b, c.r, c.g, c.b);
+        if (ri > 0) { const i0 = b + (ri - 1) * 2; idx.push(i0, i0 + 2, i0 + 1, i0 + 1, i0 + 2, i0 + 3); }
+      });
+    }
+  }
+  const leaf = new THREE.Color('#3d6a4a'), b = pos.length / 3;
+  pos.push(0, -0.02, 0); col.push(leaf.r, leaf.g, leaf.b);
+  for (let k = 0; k < 10; k++) { const a = (k / 10) * Math.PI * 2; pos.push(Math.cos(a) * 0.95, -0.03, Math.sin(a) * 0.95); col.push(leaf.r, leaf.g, leaf.b); }
+  for (let k = 0; k < 10; k++) idx.push(b, b + 1 + ((k + 1) % 10), b + 1 + k);
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  g.setIndex(idx); g.computeVertexNormals();
+  return g;
+}
+function buildTemple() {
+  const s = new THREE.Scene(); TEMPLE.scene = s;
+  s.background = new THREE.Color('#121a24');
+  s.fog = new THREE.FogExp2(0x121a24, 0.026);
+  s.add(new THREE.HemisphereLight(0x4a5a7a, 0x1a1612, 0.6));
+  const warm = new THREE.PointLight(0xffb26a, 1.5, 36, 1.4); warm.position.set(0, 2.6, 0); s.add(warm);
+  const halo = new THREE.PointLight(0xffd894, 1.3, 42, 1.3); halo.position.set(0, 7, -12); s.add(halo);
+  TEMPLE.warm = warm;
+
+  const floor = new THREE.Mesh(new THREE.CircleGeometry(48, 48), lambert('#272c32')); floor.rotation.x = -Math.PI / 2; s.add(floor);
+  const tiles = new THREE.Mesh(new THREE.RingGeometry(16, 17, 48), new THREE.MeshBasicMaterial({ color: 0x343a41 })); tiles.rotation.x = -Math.PI / 2; tiles.position.y = 0.01; s.add(tiles);
+  const rimMat = lambert('#3b4047');
+  [[0, -9.25, 27, 0.5], [0, 9.25, 27, 0.5], [-13.25, 0, 0.5, 19], [13.25, 0, 0.5, 19]].forEach(([x, z, w, d]) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, 0.32, d), rimMat); m.position.set(x, 0.16, z); s.add(m); });
+  const water = new THREE.Mesh(new THREE.PlaneGeometry(26, 18), new THREE.MeshPhongMaterial({ color: 0x0a1822, specular: 0x3a4a5a, shininess: 90 })); water.rotation.x = -Math.PI / 2; water.position.y = 0.1; s.add(water);
+
+  const pillarMat = lambert('#6b2520'), beamMat = lambert('#45201c');
+  [-10, -3, 4, 11].forEach(z => [-14.5, 14.5].forEach(x => { const p = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.48, 10, 10), pillarMat); p.position.set(x, 5, z); s.add(p); const b = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.62, 0.35, 10), lambert('#3a3a3a')); b.position.set(x, 0.17, z); s.add(b); }));
+  [-14.5, 14.5].forEach(x => { const b = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.8, 24), beamMat); b.position.set(x, 10.2, 0.5); s.add(b); });
+  for (let z = -10; z <= 11; z += 7) { const b = new THREE.Mesh(new THREE.BoxGeometry(30, 0.6, 0.6), beamMat); b.position.set(0, 10.6, z); s.add(b); }
+  const roof = new THREE.Mesh(new THREE.PlaneGeometry(40, 34), lambert('#191416', { side: THREE.DoubleSide })); roof.rotation.x = Math.PI / 2; roof.position.set(0, 11.2, 0); s.add(roof);
+  const wall = new THREE.Mesh(new THREE.PlaneGeometry(40, 14), lambert('#1c1f26')); wall.position.set(0, 6.5, -21); s.add(wall);
+  const backWall = new THREE.Mesh(new THREE.PlaneGeometry(40, 14), lambert('#1c1f26')); backWall.position.set(0, 6.5, 24); backWall.rotation.y = Math.PI; s.add(backWall);
+
+  const stepMat = lambert('#3a3029');
+  [[12, 1.1, 5, 0.55, -15.5], [8, 0.9, 3.6, 1.55, -16]].forEach(([w, h, d, y, z]) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), stepMat); m.position.set(0, y, z); s.add(m); });
+  const gold = lambert('#b98b45', { emissive: new THREE.Color('#3d2a10') });
+  const prof = [[0, 0], [1.6, 0.05], [2.1, 0.35], [1.9, 0.7], [2.4, 1.1], [1.2, 1.25], [0, 1.25]].map(([x, y]) => new THREE.Vector2(x, y));
+  const throne = new THREE.Mesh(new THREE.LatheGeometry(prof, 16), gold); throne.position.set(0, 2.0, -16); s.add(throne);
+  const haloRing = new THREE.Mesh(new THREE.TorusGeometry(3.6, 0.13, 8, 72), new THREE.MeshBasicMaterial({ color: 0xf3d28a })); haloRing.position.set(0, 7.0, -16.4); s.add(haloRing);
+  const haloRing2 = new THREE.Mesh(new THREE.TorusGeometry(2.5, 0.06, 6, 60), new THREE.MeshBasicMaterial({ color: 0xf7e2ae })); haloRing2.position.set(0, 7.0, -16.3); s.add(haloRing2);
+  const haloGlow = makeGlow('#ffdc9a', 15, 0.42); haloGlow.position.set(0, 7.0, -16); s.add(haloGlow);
+  const haloCore = makeGlow('#fff2d0', 5, 0.55); haloCore.position.set(0, 7.0, -15.9); s.add(haloCore);
+  TEMPLE.haloPos = V3(0, 7.0, -16); TEMPLE.haloGlow = haloGlow; TEMPLE.haloCore = haloCore;
+
+  const burner = new THREE.Group();
+  const bowl = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.7, 0.8, 12), lambert('#4a3d2c', { emissive: new THREE.Color('#120c06') })); bowl.position.y = 1.1; burner.add(bowl);
+  for (let i = 0; i < 3; i++) { const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.1, 0.8, 5), lambert('#3c3124')); const a = (i / 3) * 6.28; leg.position.set(Math.cos(a) * 0.55, 0.4, Math.sin(a) * 0.55); burner.add(leg); }
+  burner.position.set(-8, 0, 3); s.add(burner);
+  const SM = 70, smPos = new Float32Array(SM * 3), smData = [];
+  for (let i = 0; i < SM; i++) smData.push({ t: Math.random() * 6, x: 0, z: 0 });
+  const smGeo = new THREE.BufferGeometry(); smGeo.setAttribute('position', new THREE.BufferAttribute(smPos, 3));
+  const smoke = new THREE.Points(smGeo, new THREE.PointsMaterial({ map: glowTex(), color: new THREE.Color('#8b939c'), size: 1.4, transparent: true, opacity: 0.32, depthWrite: false }));
+  smoke.frustumCulled = false; s.add(smoke);
+
+  const lotusGeo = makeLotusGeo(), N = 500, R = mulberry(5), lamps = [];
+  const lampMesh = new THREE.InstancedMesh(lotusGeo, new THREE.MeshLambertMaterial({ vertexColors: true, emissive: new THREE.Color('#4a2a22'), side: THREE.DoubleSide }), N);
+  for (let i = 0; i < N; i++) {
+    let x, z, guard = 0;
+    do { x = (R() - 0.5) * 24.5; z = (R() - 0.5) * 16.6; } while (Math.hypot(x, z * 1.2) < 2.4 && guard++ < 50);
+    lamps.push({ x, z, ph: R() * 6.28, s: 0.26 + R() * 0.1, rot: R() * 6.28 });
+  }
+  lampMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage); lampMesh.frustumCulled = false; s.add(lampMesh);
+  const flPos = new Float32Array(N * 3), flGeo = new THREE.BufferGeometry(); flGeo.setAttribute('position', new THREE.BufferAttribute(flPos, 3));
+  const flames = new THREE.Points(flGeo, new THREE.PointsMaterial({ map: glowTex(), color: new THREE.Color('#ffc46b'), size: 0.95, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+  flames.frustumCulled = false; s.add(flames);
+
+  const mainMat = new THREE.MeshLambertMaterial({ vertexColors: true, emissive: new THREE.Color('#000000'), side: THREE.DoubleSide });
+  const main = new THREE.Mesh(lotusGeo, mainMat); main.scale.setScalar(0.85); main.position.set(0, 0.16, 0); s.add(main);
+  const mainGlow = makeGlow('#ffe1a8', 0.01, 0.95); mainGlow.position.set(0, 0.5, 0); s.add(mainGlow);
+  const ring = new THREE.Mesh(new THREE.RingGeometry(1.1, 1.25, 40), new THREE.MeshBasicMaterial({ color: 0xf3d28a, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false })); ring.rotation.x = -Math.PI / 2; ring.position.y = 0.13; s.add(ring);
+  TEMPLE.main = { mesh: main, glow: mainGlow, ring, pos: V3(0, 0.45, 0), state: 'hidden', rise: 0 };
+
+  const fragDefs = [
+    { key: '期盼', color: '#f3c86b', pos: V3(-10.2, 2.3, 5.2), line: '想被那個人遇見。', note: '第一段一開頭，就是一個心願：希望和那個人相遇。' },
+    { key: '盛年', color: '#f6d3dc', pos: V3(10.4, 1.9, -4.8), line: '要在自己最美的時候。', note: '不只想相遇，還想在生命最美好的時刻相遇。' },
+    { key: '執著', color: '#d4566c', pos: V3(1.6, 2.6, 19.2), line: '願意等很久、很久。', note: '為了這個心願，願意長久地祈求、等待。' }
+  ];
+  TEMPLE.frags = fragDefs.map((f, i) => {
+    const m = new THREE.Mesh(new THREE.OctahedronGeometry(0.5, 0), new THREE.MeshBasicMaterial({ color: new THREE.Color(f.color) }));
+    m.position.copy(f.pos); s.add(m);
+    const gl = makeGlow(f.color, 3.6, 0.85); gl.position.copy(f.pos); s.add(gl);
+    return Object.assign({}, f, { mesh: m, glow: gl, taken: false, base: f.pos.clone(), i, pos: f.pos.clone() });
+  });
+  TEMPLE.camPos = V3(0, 1.75, 12.6);
+
+  TEMPLE.update = (dt, t) => {
+    for (let i = 0; i < N; i++) {
+      const L = lamps[i], y = 0.12 + Math.sin(t * 0.8 + L.ph) * 0.025;
+      TMPE.set(Math.sin(t * 0.7 + L.ph) * 0.05, L.rot + t * 0.02, 0);
+      TMPM.compose(TMPV.set(L.x, y, L.z), TMPQ.setFromEuler(TMPE), TMPS.setScalar(L.s));
+      lampMesh.setMatrixAt(i, TMPM);
+      flPos[i * 3] = L.x; flPos[i * 3 + 1] = y + 0.2 + Math.sin(t * 6 + L.ph) * 0.01; flPos[i * 3 + 2] = L.z;
+    }
+    lampMesh.instanceMatrix.needsUpdate = true; flGeo.attributes.position.needsUpdate = true;
+    for (let i = 0; i < SM; i++) {
+      const d = smData[i]; d.t += dt; if (d.t > 6) { d.t = 0; d.x = (Math.random() - 0.5) * 0.3; d.z = (Math.random() - 0.5) * 0.3; }
+      const k = d.t / 6;
+      smPos[i * 3] = burner.position.x + d.x + Math.sin(d.t * 0.9 + i) * 0.4 * k; smPos[i * 3 + 1] = 1.6 + d.t * 0.9; smPos[i * 3 + 2] = burner.position.z + d.z + Math.cos(d.t * 0.7 + i) * 0.4 * k;
+    }
+    smGeo.attributes.position.needsUpdate = true;
+    TEMPLE.frags.forEach(f => {
+      if (f.taken) return;
+      f.mesh.rotation.y = t * 1.2 + f.i; f.mesh.rotation.x = Math.sin(t * 0.7 + f.i) * 0.4;
+      f.mesh.position.y = f.base.y + Math.sin(t * 1.4 + f.i * 2) * 0.12; f.glow.position.copy(f.mesh.position); f.pos.copy(f.mesh.position);
+      f.glow.material.opacity = 0.7 + Math.sin(t * 2.4 + f.i) * 0.2;
+    });
+    const M = TEMPLE.main;
+    if (M.state === 'revealed') { M.ring.material.opacity = 0.35 + Math.sin(t * 3) * 0.3; M.ring.scale.setScalar(1 + (t * 0.6 % 1) * 0.25); }
+    else if (M.state === 'lit' || M.state === 'rising') { M.ring.material.opacity *= 0.95; }
+    TEMPLE.haloGlow.material.opacity = 0.38 + Math.sin(t * 0.8) * 0.06;
+    haloRing.rotation.z = t * 0.05; haloRing2.rotation.z = -t * 0.08;
+  };
+  TEMPLE.reset = () => {
+    TEMPLE.frags.forEach(f => { f.taken = false; f.mesh.visible = f.glow.visible = true; f.mesh.scale.setScalar(1); f.mesh.position.copy(f.base); });
+    const M = TEMPLE.main; M.state = 'hidden'; M.mesh.position.set(0, 0.16, 0); M.mesh.material.emissive.setRGB(0, 0, 0);
+    M.glow.scale.setScalar(0.01); M.glow.position.set(0, 0.5, 0); M.ring.material.opacity = 0; M.mesh.visible = true;
+    TEMPLE.haloCore.scale.setScalar(5); TEMPLE.warm.intensity = 1.5;
+  };
+}
+
+/* ---- 25-train.js ---- */
+/* ===================== 二周目彩蛋：苗栗山間的火車 ===================== */
+/* 火車沿 x 軸前進，乘客從右側車窗往外看：出山洞 → 山坡上的油桐樹 → 山丘擋住視線 */
+const TRAIN = { built: false, x0: -96, x1: 60, y: 10.2 };
+function buildTrain() {
+  if (TRAIN.built) return;
+  TRAIN.built = true;
+  const s = new THREE.Scene(); TRAIN.scene = s;
+  s.fog = new THREE.Fog(0xdbe6e1, 60, 520);
+  const sky = makeSky(); s.add(sky); TRAIN.sky = sky;
+  const m = MOODS.may, u = sky.material.uniforms;
+  u.top.value.copy(m.top); u.bot.value.copy(m.bot); u.sunDir.value.copy(m.dir); u.sunCol.value.copy(m.sun); u.sunAmt.value = 0.7;
+  s.add(new THREE.HemisphereLight(0xeaf3f6, 0x5e7a4e, 0.74));
+  const sun = new THREE.DirectionalLight(0xfff6e4, 0.86); sun.position.copy(m.dir).multiplyScalar(100); s.add(sun);
+  s.add(new THREE.AmbientLight(0xffffff, 0.05));
+
+  const TX = 14, TZ = 34;
+  const hAt = (x, z) => {
+    let h = 7.9;
+    if (z > 4) h += (z - 4) * 0.13 + (fbm(x * 0.02, z * 0.02, 41, 4) - 0.45) * 6 * sstep(4, 14, z) + sstep(50, 110, z) * 18;
+    else if (z < -4) h += (fbm(x * 0.02, z * 0.02, 43, 3) - 0.5) * 4 - (-4 - z) * 0.05;
+    h += 30 * sstep(-50, -57, x) * sstep(4.5, 9, Math.abs(z));            // 山洞所在的山（鐵道兩側是切開的山壁）
+    h += 28 * sstep(22, 32, x) * (1 - sstep(16, 30, z)) * sstep(4.5, 8, z); // 轉彎處擋住視線的山丘
+    h += 2.2 * Math.exp(-((x - TX) ** 2 + (z - TZ) ** 2) / 60);            // 油桐樹站在一個小坡上
+    return h;
+  };
+  TRAIN.hAt = hAt;
+  const g = new THREE.PlaneGeometry(420, 260, 140, 90); g.rotateX(-Math.PI / 2); g.translate(-10, 0, 60);
+  const p = g.attributes.position;
+  for (let i = 0; i < p.count; i++) p.setY(i, hAt(p.getX(i), p.getZ(i)));
+  const ng = g.toNonIndexed(); ng.computeVertexNormals();
+  const np = ng.attributes.position, nr = ng.attributes.normal, cols = new Float32Array(np.count * 3);
+  const pal = ['#5f8c50', '#6c9858', '#56804a', '#7aa564'].map(c => new THREE.Color(c)), rock = new THREE.Color('#7b7a6c'), ballast = new THREE.Color('#857d6e');
+  for (let f = 0; f < np.count; f += 3) {
+    const cx = (np.getX(f) + np.getX(f + 1) + np.getX(f + 2)) / 3, cz = (np.getZ(f) + np.getZ(f + 1) + np.getZ(f + 2)) / 3;
+    const c = TMPC.copy(pal[Math.floor(hash2(Math.floor(cx / 5), Math.floor(cz / 5), 4) * pal.length)]);
+    const ny = (nr.getY(f) + nr.getY(f + 1) + nr.getY(f + 2)) / 3;
+    if (ny < 0.75) c.lerp(rock, 0.55);
+    if (Math.abs(cz) < 3.2) c.copy(ballast);
+    c.multiplyScalar(0.95 + hash2(f, 3, 9) * 0.1);
+    for (let k = 0; k < 3; k++) cols.set([c.r, c.g, c.b], (f + k) * 3);
+  }
+  ng.setAttribute('color', new THREE.BufferAttribute(cols, 3));
+  s.add(new THREE.Mesh(ng, new THREE.MeshLambertMaterial({ vertexColors: true })));
+
+  /* 山洞：車廂在洞裡時，窗外只看得到洞壁和一盞盞燈 */
+  const tunnel = new THREE.Mesh(new THREE.BoxGeometry(70, 6.4, 8), new THREE.MeshBasicMaterial({ color: 0x17140f, side: THREE.BackSide }));
+  tunnel.position.set(-90, 11.2, 0); s.add(tunnel);
+  const lampMat = new THREE.MeshBasicMaterial({ color: 0xffd28a });
+  for (let x = -122; x < -56; x += 6) { const l = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.22, 0.1), lampMat); l.position.set(x, 12.6, 3.9); s.add(l); }
+  const stone = lambert('#77726a');
+  [[-55, 11.2, -4.6, 1.4, 7.4, 1.6], [-55, 11.2, 4.6, 1.4, 7.4, 1.6], [-55, 15.4, 0, 1.4, 1.6, 10.8]].forEach(([x, y, z, w, h, d]) => { const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), stone); b.position.set(x, y, z); s.add(b); });
+
+  /* 鐵道旁的電線桿：一根根閃過，才有速度感 */
+  const poleGeo = new THREE.CylinderGeometry(0.1, 0.13, 7.5, 6), poleMat = lambert('#5a4f45'), armGeo = new THREE.BoxGeometry(0.12, 0.12, 1.6);
+  for (let x = -50; x < 70; x += 14) {
+    const pole = new THREE.Mesh(poleGeo, poleMat); pole.position.set(x, 11.6, 3.4); s.add(pole);
+    const arm = new THREE.Mesh(armGeo, poleMat); arm.position.set(x, 14.6, 3.4); s.add(arm);
+  }
+
+  /* 山坡上的樹林 */
+  const trunkGeo = new THREE.CylinderGeometry(0.14, 0.2, 1.6, 5); trunkGeo.translate(0, 0.8, 0);
+  const N = 150, crowns = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 0), lambert('#ffffff'), N), trunks = new THREE.InstancedMesh(trunkGeo, lambert('#5d544a'), N);
+  const R = mulberry(13), greens = ['#4d7a52', '#5c8a5c', '#3f6a4b', '#6a955f'].map(c => new THREE.Color(c));
+  let n = 0, guard = 0;
+  while (n < N && guard++ < 6000) {
+    const x = -60 + R() * 150, z = 7 + Math.pow(R(), 0.8) * 110;
+    if (Math.hypot(x - TX, z - TZ) < 12) continue;
+    if (z < TZ + 7 && Math.abs(x - TX) < 26) continue;                // 油桐樹前面留一片空地，讓它被看見
+    const y = hAt(x, z), sc = 1.5 + R() * 2;
+    TMPM.compose(TMPV.set(x, y - 0.2, z), TMPQ.identity(), TMPS.set(sc, sc * 1.2, sc)); trunks.setMatrixAt(n, TMPM);
+    TMPE.set(R(), R() * 6, R()); TMPM.compose(TMPV.set(x, y + sc * 1.7, z), TMPQ.setFromEuler(TMPE), TMPS.set(sc * 1.25, sc * 1.1, sc * 1.25)); crowns.setMatrixAt(n, TMPM);
+    crowns.setColorAt(n, greens[Math.floor(R() * greens.length)]); n++;
+  }
+  trunks.count = crowns.count = n; if (crowns.instanceColor) crowns.instanceColor.needsUpdate = true;
+  s.add(trunks, crowns);
+
+  TRAIN.tree = buildTungTree({ seed: 31, base: V3(TX, hAt(TX, TZ) - 0.1, TZ), scale: 1.3 });
+  TRAIN.tree.setBloomAll(1, true);
+  s.add(TRAIN.tree.group);
+  TRAIN.treeTop = V3(TX, hAt(TX, TZ) + 6.5, TZ);
+
+  const baseYaw = Math.atan2(-0.36, -0.93);
+  TRAIN.place = x => {
+    const t = TRAIN.treeTop, yawTree = Math.atan2(-(t.x - x), -(t.z - 0));
+    const yaw = baseYaw + clamp(wrapAngle(yawTree - baseYaw) * 0.6, -0.85, 0);
+    camera.position.set(x, TRAIN.y, 0);
+    camera.rotation.set(0.1, yaw, 0, 'YXZ');
+  };
+  TRAIN.update = (dt, t) => { sky.position.copy(camera.position); TRAIN.tree.update(dt, t); };
+}
+
+/* ---- 30-ui.js ---- */
+/* ===================== 介面元件 ===================== */
+const after = (p, fn) => p.then(fn, () => {});
+const UPDATERS = new Set();
+function onUpdate(fn) { const u = { fn, r: RUN }; UPDATERS.add(u); return () => UPDATERS.delete(u); }
+function stepUpdaters(dt) {
+  for (const u of UPDATERS) {
+    if (u.r.cancelled) { UPDATERS.delete(u); continue; }
+    try { u.fn(dt); } catch (err) { console.error(err); }
+  }
+}
+
+function showHUD(stage, ref) {
+  $('#hud').hidden = false;
+  $('#hud-stage').textContent = stage;
+  $('#hud-ref').hidden = !ref;
+  $('#hud-ref-text').textContent = ref ? '對照課文　' + ref : '';
+}
+function setMeter(v) {
+  const m = $('#meter'); m.hidden = v == null;
+  if (v != null) $('#meter-fill').style.width = clamp(v, 0, 100).toFixed(1) + '%';
+}
+function crackMeter(on) { $('#meter').classList.toggle('cracked', !!on); }
+function setCounter(html) { const c = $('#counter'); c.hidden = html == null; if (html != null && c.innerHTML !== html) c.innerHTML = html; }
+const cnt = (label, a, b) => `${label}　<b>${a}</b> / ${b}`;
+
+let hintTimer = 0;
+function hint(text, sec = 5) {
+  const h = $('#hint'); clearTimeout(hintTimer);
+  if (!text) { h.hidden = true; return; }
+  h.textContent = text; h.hidden = false;
+  if (sec > 0) hintTimer = setTimeout(() => { h.hidden = true; }, (sec * 1000) / SPEED);
+}
+
+/* 旁白字幕：打字效果，點一下顯示全文，再點一下繼續 */
+let captionAdvance = null;
+function say(text, opts = {}) {
+  return pend(resolve => {
+    const box = $('#caption'), tx = $('#caption-text'), who = $('#caption-who');
+    who.hidden = !opts.who; who.textContent = opts.who || '';
+    box.hidden = false;
+    const chars = Array.from(text), instant = REDUCED || AUTO;
+    let typed = false, finished = false;
+    const finish = () => { if (finished) return; finished = true; captionAdvance = null; resolve(); };
+    const complete = () => {
+      if (typed) return; typed = true; tx.textContent = text;
+      if (opts.auto != null) after(wait(AUTO ? 0.02 : opts.auto), finish);
+    };
+    tx.textContent = instant ? text : '';
+    if (instant) complete();
+    else after(tween(Math.min(2.4, chars.length * 0.05), (e, k) => { if (!typed) tx.textContent = chars.slice(0, Math.ceil(k * chars.length)).join(''); }, E.linear), complete);
+    captionAdvance = () => { if (!typed) { complete(); return; } finish(); };
+    if (AUTO) after(wait(0.03), finish);
+  });
+}
+function hideCaption() { $('#caption').hidden = true; captionAdvance = null; }
+
+/* 章節卡：直書標題＋紅印 */
+let stageCardClose = null;
+function stageCard(o) {
+  return pend(resolve => {
+    const el = $('#stage-card');
+    $('#sc-seal').textContent = o.seal; $('#sc-kicker').textContent = o.kicker; $('#sc-title').textContent = o.title;
+    $('#sc-ref').textContent = o.ref || ''; $('#sc-goal').textContent = o.goal || '';
+    el.hidden = false; el.classList.remove('show');
+    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('show')));
+    const t0 = performance.now();
+    let closed = false;
+    const close = force => {
+      if (closed) return;
+      if (!force && !AUTO && performance.now() - t0 < 900) return;
+      closed = true; stageCardClose = null; el.onclick = null;
+      el.classList.remove('show');
+      setTimeout(() => { if (!el.classList.contains('show')) el.hidden = true; }, 650 / SPEED);
+      SND.init();
+      resolve();
+    };
+    el.onclick = () => close(false);
+    stageCardClose = close;
+    after(wait(AUTO ? 0.05 : 5), () => close(true));
+  });
+}
+
+/* 對話框 */
+function openModal(html, opts = {}) {
+  const m = $('#modal'), s = $('#sheet');
+  s.className = 'sheet' + (opts.wide ? ' wide' : '');
+  s.innerHTML = html; m.hidden = false; s.scrollTop = 0;
+  if (!opts.noFocus) setTimeout(() => { const f = s.querySelector('[data-autofocus]'); if (f) f.focus({ preventScroll: true }); }, 60);
+  return s;
+}
+function closeModal() { $('#modal').hidden = true; $('#sheet').innerHTML = ''; }
+function infoCard(o) {
+  return pend(resolve => {
+    const s = openModal(`${o.eyebrow ? `<div class="eyebrow">${esc(o.eyebrow)}</div>` : ''}<h2>${esc(o.title)}</h2>${o.html || ''}
+      <div class="actions">${o.buttons.map(b => `<button class="btn${b.primary ? ' btn-primary' : ''}" type="button" data-k="${esc(b.k)}"${b.primary ? ' data-autofocus' : ''}>${esc(b.label)}</button>`).join('')}</div>`, { wide: !!o.wide });
+    s.querySelectorAll('[data-k]').forEach(b => b.addEventListener('click', () => { closeModal(); resolve(b.dataset.k); }));
+    if (AUTO) setTimeout(() => { const b = s.querySelector('.btn-primary') || s.querySelector('[data-k]'); if (b) b.click(); }, 30);
+  });
+}
+function pickCards(o) {
+  return pend(resolve => {
+    const s = openModal(`${o.eyebrow ? `<div class="eyebrow">${esc(o.eyebrow)}</div>` : ''}<h2>${esc(o.title)}</h2>${o.intro ? `<p class="muted">${esc(o.intro)}</p>` : ''}
+      <div class="cards">${o.items.map(it => `<button class="card${it.alt ? ' alt' : ''}" type="button" data-k="${esc(it.k)}">${it.tag ? `<span class="tag">${esc(it.tag)}</span>` : ''}<h3>${esc(it.title)}</h3>${it.desc ? `<p>${esc(it.desc)}</p>` : ''}${it.done ? '<span class="done">已完成</span>' : ''}</button>`).join('')}</div>
+      ${o.back ? `<div class="actions"><button class="btn btn-text" type="button" data-k="__back">${esc(o.back)}</button></div>` : ''}`, { wide: true });
+    s.querySelectorAll('[data-k]').forEach(b => b.addEventListener('click', () => { closeModal(); resolve(b.dataset.k); }));
+    if (AUTO) setTimeout(() => { const b = s.querySelector(`[data-k="${o.autoPick || o.items[0].k}"]`); if (b) b.click(); }, 30);
+  });
+}
+
+/* 過關提問 */
+function quiz(q) {
+  return pend(resolve => {
+    let tries = 0;
+    const s = openModal(`<div class="eyebrow">${esc(q.eyebrow)}</div><p class="prompt">${esc(q.prompt)}</p>
+      <div class="options" role="group" aria-label="選項">${q.options.map((o, i) => `<button class="opt" type="button" data-i="${i}"><span class="k">${'ABCD'[i]}</span><span>${esc(o.t)}</span></button>`).join('')}</div>
+      <div class="feedback" id="quiz-fb" aria-live="polite" hidden></div>
+      <div class="actions"><button class="btn btn-primary" id="quiz-next" type="button" hidden>繼續</button></div>`, { noFocus: true });
+    const fb = s.querySelector('#quiz-fb'), next = s.querySelector('#quiz-next');
+    s.querySelectorAll('.opt').forEach(btn => btn.addEventListener('click', () => {
+      const o = q.options[+btn.dataset.i]; tries++;
+      if (o.ok) {
+        btn.classList.add('right'); s.querySelectorAll('.opt').forEach(b => { b.disabled = true; });
+        fb.className = 'feedback ok'; fb.innerHTML = `<b>${tries === 1 ? '一次就答對！' : '答對了。'}</b>${esc(q.explain)}`; fb.hidden = false;
+        if (!(q.id in SAVE.answers)) { SAVE.answers[q.id] = tries === 1; persist(); }
+        SND.chime();
+        next.hidden = false;
+        next.onclick = () => { closeModal(); resolve({ firstTry: tries === 1 }); };
+        setTimeout(() => { next.scrollIntoView({ block: 'nearest', behavior: REDUCED ? 'auto' : 'smooth' }); next.focus({ preventScroll: true }); }, 60);
+        if (AUTO) setTimeout(() => next.click(), 20);
+      } else {
+        btn.classList.add('wrong'); btn.disabled = true;
+        fb.className = 'feedback no'; fb.textContent = o.fb; fb.hidden = false; SND.low();
+      }
+    }));
+    if (AUTO) setTimeout(() => { const b = s.querySelector(`.opt[data-i="${q.options.findIndex(o => o.ok)}"]`); if (b) b.click(); }, 30);
+  });
+}
+
+/* 跟著 3D 位置飄的字 */
+function floatText(text, x, y, cls = '', dur = 3) {
+  const el = document.createElement('div');
+  el.className = 'float' + (cls ? ' ' + cls : ''); el.textContent = text;
+  $('#fx').appendChild(el);
+  const w = el.offsetWidth, h = el.offsetHeight;
+  el.style.left = clamp(x, w / 2 + 12, window.innerWidth - w / 2 - 12) + 'px';
+  el.style.top = clamp(y, h + 80, window.innerHeight - h - 20) + 'px';
+  const ms = (dur * 1000) / SPEED;
+  if (el.animate) {
+    const a = el.animate([
+      { opacity: 0, transform: 'translate(-50%, -30%)' },
+      { opacity: 1, transform: 'translate(-50%, -50%)', offset: 0.12 },
+      { opacity: 1, transform: 'translate(-50%, -90%)', offset: 0.78 },
+      { opacity: 0, transform: 'translate(-50%, -140%)' }
+    ], { duration: ms, easing: 'ease-out' });
+    a.onfinish = () => el.remove();
+  } else setTimeout(() => el.remove(), ms);
+}
+
+/* 畫面邊緣的方向箭頭：目標不在畫面上時指路 */
+function pointTo(p) {
+  const el = $('#edge-arrow');
+  if (!p) { el.hidden = true; return; }
+  const sp = toScreen(p);
+  if (sp.inView) { el.hidden = true; return; }
+  const v = TMPV.copy(p).applyMatrix4(camera.matrixWorldInverse);
+  let dx = v.x, dy = -v.y;
+  if (v.z > 0) { dx = (Math.sign(v.x) || 1) * Math.max(Math.abs(v.x), Math.abs(v.z)); dy *= 0.3; }
+  if (Math.abs(dx) + Math.abs(dy) < 1e-4) dx = 1;
+  const Wd = window.innerWidth, Ht = window.innerHeight, cx = Wd / 2, cy = Ht / 2;
+  const k = Math.min((cx - 50) / Math.max(1e-4, Math.abs(dx)), (cy - 90) / Math.max(1e-4, Math.abs(dy)));
+  el.style.left = (cx + dx * k) + 'px'; el.style.top = (cy + dy * k) + 'px';
+  el.firstElementChild.style.transform = `rotate(${Math.atan2(dy, dx)}rad)`;
+  el.hidden = false;
+}
+
+/* 按住開花的光圈 */
+const RING_C = 2 * Math.PI * 40;
+function ringShow(x, y) { const r = $('#hold-ring'); r.hidden = false; r.style.left = x + 'px'; r.style.top = y + 'px'; }
+function ringSet(prog, a, b) {
+  const z = $('#r-zone'), p = $('#r-prog');
+  z.style.strokeDasharray = `${RING_C * (b - a)} ${RING_C}`; z.style.strokeDashoffset = `${-RING_C * a}`;
+  p.style.strokeDasharray = `${RING_C * clamp(prog, 0, 1)} ${RING_C}`;
+  $('#hold-ring').classList.toggle('in', prog >= a && prog <= b);
+}
+function ringHide() { $('#hold-ring').hidden = true; }
+
+/* 心之碎片：十二片，接住一朵落花補上一片 */
+const HEART_PATH = 'M50 88 C 18 66, 2 46, 8 25 C 14 7, 38 3, 50 21 C 62 3, 86 7, 92 25 C 98 46, 82 66, 50 88 Z';
+let HEART_TARGETS = [];
+function buildHearts() {
+  const N = 12, R = mulberry(12), C = [50, 50], rays = [];
+  for (let i = 0; i < N; i++) {
+    const a = (i / N) * Math.PI * 2 - Math.PI / 2 + (R() - 0.5) * 0.25, pts = [C.slice()];
+    [0.3, 0.62, 1.0, 1.7].forEach((r, k) => { const j = k < 3 ? (R() - 0.5) * 0.24 : 0; pts.push([C[0] + Math.cos(a + j) * r * 52, C[1] + Math.sin(a + j) * r * 52]); });
+    rays.push({ a, pts });
+  }
+  const f = p => p.map(v => v.toFixed(1)).join(',');
+  let html = `<defs><clipPath id="hclip"><path d="${HEART_PATH}"/></clipPath></defs><g clip-path="url(#hclip)">`;
+  HEART_TARGETS = [];
+  for (let i = 0; i < N; i++) {
+    const A = rays[i].pts, B = rays[(i + 1) % N].pts;
+    const poly = A.concat(B.slice(1).reverse());
+    html += `<polygon class="hs" points="${poly.map(f).join(' ')}" fill="rgba(244,247,242,0.3)"/>`;
+    let mid = (rays[i].a + rays[(i + 1) % N].a) / 2; if (i === N - 1) mid += Math.PI;
+    HEART_TARGETS.push([C[0] + Math.cos(mid) * 24, C[1] + Math.sin(mid) * 24]);
+  }
+  html += `</g><g clip-path="url(#hclip)" fill="none" stroke="#fbfcf9" stroke-width="1.5" stroke-linejoin="round">${rays.map(r => `<polyline points="${r.pts.map(f).join(' ')}"/>`).join('')}</g><path d="${HEART_PATH}" fill="none" stroke="#fbfcf9" stroke-width="2.4"/>`;
+  $('#heart-svg').innerHTML = html;
+}
+function heartsReset() { buildHearts(); $('#hearts').classList.remove('whole'); heartsCount(0); }
+function heartsCount(n) { $('#hearts-count').textContent = `心之碎片　${n} / 12`; }
+function heartTargetScreen(i) {
+  const r = $('#heart-svg').getBoundingClientRect(), t = HEART_TARGETS[i] || [50, 50];
+  return [r.left + ((t[0] + 4) / 108) * r.width, r.top + ((t[1] + 4) / 100) * r.height];
+}
+function fillShard(i) { const p = $$('#heart-svg .hs')[i]; if (p) p.setAttribute('fill', '#c23a57'); }
+function flyShard(x, y, i) {
+  const el = document.createElement('div'); el.className = 'shard';
+  el.innerHTML = '<svg viewBox="0 0 20 20"><path d="M10 2 L18 9 L11 18 L3 10 Z" fill="#c23a57" stroke="#fbfcf9" stroke-width="1.5"/></svg>';
+  el.style.left = x + 'px'; el.style.top = y + 'px';
+  $('#fx').appendChild(el);
+  const [tx, ty] = heartTargetScreen(i), ms = 700 / SPEED;
+  if (el.animate) {
+    const a = el.animate([
+      { transform: 'translate(0,0) scale(1.6) rotate(0deg)', opacity: 1 },
+      { transform: `translate(${(tx - x) * 0.5}px, ${(ty - y) * 0.5 - 60}px) scale(1.2) rotate(140deg)`, opacity: 1, offset: 0.5 },
+      { transform: `translate(${tx - x}px, ${ty - y}px) scale(0.6) rotate(300deg)`, opacity: 0.9 }
+    ], { duration: ms, easing: 'ease-in-out' });
+    a.onfinish = () => { el.remove(); fillShard(i); };
+  } else setTimeout(() => { el.remove(); fillShard(i); }, ms);
+}
+
+/* 第二幕的顫動計 */
+function gaugeSet(rate, lo, hi) {
+  const v = r => clamp(r / 6, 0, 1);
+  const P = (t, rad) => { const a = Math.PI * (1 - t); return [60 + rad * Math.cos(a), 60 - rad * Math.sin(a)]; };
+  const [x1, y1] = P(v(lo), 50), [x2, y2] = P(v(hi), 50), [nx, ny] = P(v(rate), 44);
+  $('#g-band').setAttribute('d', `M${x1.toFixed(1)} ${y1.toFixed(1)} A50 50 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}`);
+  const n = $('#g-needle'); n.setAttribute('x2', nx.toFixed(1)); n.setAttribute('y2', ny.toFixed(1));
+}
+
+/* 淡入淡出 */
+function setFadeNow(v, white) { const f = $('#fade'); f.classList.toggle('white', !!white); f.style.opacity = String(v); }
+function fade(to, dur, white) {
+  const f = $('#fade');
+  if (white != null) f.classList.toggle('white', !!white);
+  const from = parseFloat(f.style.opacity || '0');
+  return tween(dur, e => { f.style.opacity = String(lerp(from, to, e)); }, E.inOut);
+}
+
+function resetUI() {
+  hideCaption(); hint(null); closeModal();
+  const sc = $('#stage-card'); sc.hidden = true; sc.classList.remove('show'); stageCardClose = null;
+  $('#title-screen').hidden = true; $('#hud').hidden = true;
+  setMeter(null); crackMeter(false); setCounter(null);
+  ['#hearts', '#rooted', '#rustle', '#btn-walk', '#btn-lookup', '#vignette', '#train-window', '#thought'].forEach(s => { $(s).hidden = true; });
+  $('#hearts').classList.remove('whole');
+  ringHide(); $('#edge-arrow').hidden = true;
+  $$('#fx .float, #fx .shard').forEach(e => e.remove());
+}
+
+/* ---- 40-content.js ---- */
+/* ===================== 文字內容（全部為改寫與原創，不收錄詩句原文） ===================== */
+const Q = {
+  pro: {
+    id: 'pro', eyebrow: '過關提問｜序章',
+    prompt: '第一段裡，「我」為了一段緣分，在佛前祈求了「五百年」。這個數字最主要想表達什麼？',
+    options: [
+      { t: '作者真的等了五百年，這是一段真實的紀錄。', fb: '人不可能真的等上五百年。詩裡的數字，另有用意。' },
+      { t: '用誇大的時間，凸顯等待之久、心意之深。', ok: true },
+      { t: '祈求的人太多了，所以要排很久的隊。', fb: '詩裡沒有這樣的情節。想想看：把時間誇大，能讓讀者感受到什麼？' },
+      { t: '暗示兩個人前世都是古代人。', fb: '重點不在年代，而在等待有多長、心意有多深。' }
+    ],
+    explain: '這是誇飾法：故意把時間說得極長，讓讀者感受到那份執著有多深。'
+  },
+  act1: {
+    id: 'act1', eyebrow: '過關提問｜第一幕',
+    prompt: '第二段寫樹開花時，用了「慎重」這個詞。作者為什麼用「慎重」，而不用「熱烈」或「隨意」？',
+    options: [
+      { t: '「慎重」表示花開得很慢，是在描寫植物生長的速度。', fb: '這裡寫的不是速度，而是開花時的心情。' },
+      { t: '「慎重」寫出珍惜與敬畏：等了這麼久，只有這一次機會，所以全心全意、不敢馬虎。', ok: true },
+      { t: '「慎重」表示樹很怕花被路人摘走。', fb: '詩裡沒有提到害怕被摘。想想等了這麼久的心情。' },
+      { t: '三個詞意思差不多，選「慎重」只是唸起來比較順。', fb: '這三個詞的情感溫度差很多。換一個詞，整句的心情就跟著變了。' }
+    ],
+    explain: '這就是煉字。「熱烈」只有激情，「隨意」毫不在乎；「慎重」同時帶著期待、珍惜和一點緊張。就像剛才的花苞：急不得，也拖不得。'
+  },
+  act2: {
+    id: 'act2', eyebrow: '過關提問｜第二幕',
+    prompt: '他走近時，樹請他仔細聽：葉子的顫抖，正是自己等待已久、按捺不住的心。把看不見的情感寫成看得見、聽得到的景物，效果是什麼？',
+    options: [
+      { t: '說明當天山上的風很大。', fb: '葉子不是被風吹抖的。想想樹此刻的心情。' },
+      { t: '把抽象的緊張與期待，化成具體的畫面和聲音，讓讀者更能感同身受。', ok: true },
+      { t: '暗示這棵樹生病了，所以葉子發抖。', fb: '這是借景物寫心情，不是在說樹生病。' },
+      { t: '表示樹在生他的氣。', fb: '他才剛走近，樹的心情是期待，不是生氣。' }
+    ],
+    explain: '這是意象的運用：用具體可感的景物，承載抽象的情感。葉子的顫抖，就是樹的熱切與緊張，就像你剛才拚命點出的那陣「沙沙」聲。'
+  },
+  fin1: {
+    id: 'fin1', eyebrow: '過關提問｜終章之一',
+    prompt: '整首詩的情緒，從滿心期盼急轉為失落。這個轉折發生在哪一刻？',
+    options: [
+      { t: '向佛祈求的時候', fb: '那時還充滿希望呢。' },
+      { t: '化作一棵樹的時候', fb: '化作樹，是為了被看見，期盼還在延續。' },
+      { t: '滿樹開花的時候', fb: '花開是期盼的最高點，還沒有轉折。' },
+      { t: '他毫不在意地走過的時候', ok: true }
+    ],
+    explain: '第三段中間的「而當」一出現，情緒就急轉直下。前面的期待越滿，後面的失落就越重。'
+  },
+  fin2: {
+    id: 'fin2', eyebrow: '過關提問｜終章之二',
+    prompt: '詩裡有許多前後對照：前世祈求的漫長，對照今生擦肩的短暫；樹的熱切，對照他的冷淡；花開，對照花落。這樣寫的效果是什麼？',
+    options: [
+      { t: '讓詩的節奏變快，比較好背。', fb: '對照的重點不是節奏，而是情感的落差。' },
+      { t: '讓兩種相反的情況互相襯托，使最後的失落更加強烈。', ok: true },
+      { t: '提醒讀者時間過得很快，要珍惜光陰。', fb: '這首詩的重點在情感，不在惜時。' },
+      { t: '批評他沒有禮貌，不懂得欣賞。', fb: '詩人沒有責怪對方，只是安靜地寫下自己的心碎。' }
+    ],
+    explain: '這是對比（映襯）：把相反的事物放在一起，讓彼此更鮮明。希望越高，落空時就越痛。'
+  }
+};
+const Q_IDS = ['pro', 'act1', 'act2', 'fin1', 'fin2'];
+
+const WISHES = [
+  '願你走這條路的那天，天氣晴朗。',
+  '願你看見我時，我正好開到最美。',
+  '願你停下腳步，哪怕只有一下。',
+  '願你聽見風吹過我的聲音。',
+  '願你記得，這條路旁有一棵樹。',
+  '願我們的相遇，不只是擦肩。'
+];
+const DEFAULT_WISH = '願這一次，你會抬頭。';
+
+const FRIEND_PICKS = [
+  { k: '拉開距離', t: '從親近的「你」退回「朋友」，像在告訴自己：我們終究只是路人。' },
+  { k: '轉身傾訴', t: '他已經走遠、聽不見了，於是轉過身，把心事說給讀者聽（呼告）。' },
+  { k: '安靜收場', t: '用平和的稱呼收住情緒，讓心碎顯得含蓄、溫柔。' },
+  { k: '我的想法', t: '我有不同的解讀，寫在下面。' }
+];
+
+const TRAVEL = {
+  rain: { tag: '處境一', title: '大雨中趕路', desc: '雨很大，傘壓得很低。', mood: 'rain', pose: 'umbrella', speed: 1.6,
+    intro: '雨下得很大。你把傘壓得很低，只看得見腳下的泥濘。', lookup: '雨太大了，傘拿不開。', after: '你走過了那棵樹，什麼也沒有看見。' },
+  hurry: { tag: '處境二', title: '趕赴另一場約', desc: '時間快來不及了。', mood: 'may', pose: 'letter', speed: 2.6,
+    intro: '你要趕赴另一場約，眼睛只盯著前方的路。', lookup: '來不及了，不能停下來。', after: '你匆匆走過那棵樹，連風聲都沒聽見。' },
+  heart: { tag: '處境三', title: '心裡的另一棵樹', desc: '他的心裡，正想著別人。', mood: 'afternoon', pose: 'think', speed: 1.5,
+    intro: '你的心裡，也住著另一棵樹。你正想著另一個人。', lookup: '你滿腦子都是另一個人。', after: '你走過那棵樹，心思卻在很遠的地方。' },
+  train: { tag: '作者的經歷', title: '火車上的一瞥', desc: '這首詩的靈感，其實來自一趟火車。', mood: 'may' }
+};
+const REFLECT_PICKS = [
+  '不一定。每個人都有自己的處境，沒被看見，不代表不值得。',
+  '會遺憾，但要不要回應是對方的自由，要學著尊重。',
+  '與其一直等著被看見，不如好好表達，或轉身向前走。'
+];
+
+const REWRITE = {
+  wind: {
+    tag: '主動出擊・相遇版', title: '一陣狂風', desc: '讓風把花吹到他的肩上。他會抬頭嗎？',
+    task: '寫一段「相遇版」的新結局：風起的瞬間、他抬頭看見了什麼、「我」此刻的心情。',
+    frames: ['那一陣風，替我＿＿＿＿', '你停下腳步，＿＿＿＿', '原來＿＿＿＿'],
+    sample: ['風比我勇敢', '替我把一朵花', '輕輕放上你的肩', '你抬頭的那一秒', '我等了五百年']
+  },
+  bird: {
+    tag: '不再固守・同行版', title: '化作飛鳥', desc: '不再站在路旁，而是陪他同行。',
+    task: '寫一段「同行版」的新結局：不再原地等待，而是一起走一段路。想想「守候」和「同行」有什麼不同。',
+    frames: ['我不再＿＿＿＿，而是＿＿＿＿', '這一次，我＿＿＿＿', '你走多遠，＿＿＿＿'],
+    sample: ['這一次　我不求做一棵樹', '我是你頭頂的那隻鳥', '你走多遠　我就飛多遠', '原來陪伴', '比等待更靠近你']
+  },
+  seasons: {
+    tag: '自我成長・成長版', title: '四季更迭', desc: '花落之後，樹還能成為什麼？',
+    task: '寫一段「成長版」的新結局：花落之後，樹依然有自己的價值。可以寫夏天的樹蔭、秋天的鳥巢、春天的新芽。',
+    frames: ['花謝了，我＿＿＿＿', '即使沒有人＿＿＿＿，我依然＿＿＿＿', '原來＿＿＿＿'],
+    sample: ['花落盡的那天　我沒有倒下', '夏天　我把樹蔭留給趕路的人', '秋天　我讓鳥在枝頭築巢', '原來沒有被看見的我', '也一直好好地活著']
+  }
+};
+
+const CHAPTERS = [
+  { k: 'prologue', tag: '序章', title: '佛前的祈願', desc: '對照第一段｜誇飾' },
+  { k: 'act1', tag: '第一幕', title: '化樹與盛放', desc: '對照第二段｜煉字' },
+  { k: 'act2', tag: '第二幕', title: '微風的訊號', desc: '對照第三段（他走近時）｜意象' },
+  { k: 'finale', tag: '終章', title: '無聲的擦肩', desc: '對照第三段（他走過之後）｜轉折、對比' },
+  { k: 'traveler', tag: '二周目', title: '旅人視角', desc: '他為什麼沒有抬頭？' },
+  { k: 'workshop', tag: '二周目', title: '改寫結局工坊', desc: '如果我是作者' }
+];
+
+const TEACHER_HTML = `
+<p>這是〈一棵開花的樹〉的 3D 互動閱讀。四個關卡對應課文三段，每關結束有過關提問；破關後解鎖二周目，讓學生換位思考、改寫結局。學生用平板或電腦開啟這個頁面就能玩，老師也可以接投影帶全班一起玩。</p>
+<h3>建議流程（一節課）</h3>
+<ol>
+  <li>全班朗讀課文（5 分鐘）</li>
+  <li>序章＋第一幕：誇飾、煉字（12 分鐘）</li>
+  <li>第二幕＋終章：意象、轉折、對比（13 分鐘）</li>
+  <li>討論「朋友啊」（7 分鐘）</li>
+  <li>二周目：旅人視角、改寫結局（8 分鐘，或當回家作業）</li>
+</ol>
+<h3>關卡與檢核點</h3>
+<div class="table-wrap"><table>
+  <thead><tr><th>關卡</th><th>對照課文</th><th>玩法</th><th>檢核點</th></tr></thead>
+  <tbody>
+    <tr><td>序章　佛前的祈願</td><td>第一段</td><td>找回三枚記憶碎片，點亮塵緣之燈</td><td>誇飾：「五百年」</td></tr>
+    <tr><td>第一幕　化樹與盛放</td><td>第二段</td><td>扎根後無法移動；按住花苞，在金色區段放開才會開花</td><td>煉字：「慎重」</td></tr>
+    <tr><td>第二幕　微風的訊號</td><td>第三段（他走近時）</td><td>他越走越近，點擊的節奏要跟著加快</td><td>意象：化抽象為具體</td></tr>
+    <tr><td>終章　無聲的擦肩</td><td>第三段（他走過之後）</td><td>畫面轉灰，接住落花化為心之碎片</td><td>情感轉折、對比；討論「朋友啊」</td></tr>
+  </tbody>
+</table></div>
+<h3>操作方式</h3>
+<ul>
+  <li>拖曳畫面：環顧四周（鍵盤用方向鍵）</li>
+  <li>點一下：互動、接住落花（鍵盤用 Enter）</li>
+  <li>按住：讓花苞開花（鍵盤按住空白鍵）</li>
+</ul>
+<h3>創作背景（二周目「火車上的一瞥」會揭曉）</h3>
+<p>據作者回憶，這首詩寫於 1980 年。那年五月，她搭火車經過苗栗山間，出了山洞後偶然回頭，看見山坡上一棵開滿白花的油桐樹，還來不及細看，就隨著列車轉彎消失了。她形容這是獻給大自然的情詩，也認為讀者讀成等待愛情的詩同樣成立。遊戲裡的樹，因此設定成五月盛開的油桐。</p>
+<h3>提醒</h3>
+<ul>
+  <li>遊戲裡不放詩句原文，每關左上角會標示對照課文的段落，請學生打開課本對照。</li>
+  <li>成果卡會記錄過關提問是否一次答對、開花與共鳴的表現，以及學生寫下的文字。學生可截圖，或按「複製文字」貼到 Google Classroom 等平台繳交。</li>
+  <li>進度只存在各自裝置的瀏覽器裡，換裝置或清除瀏覽資料就會消失。</li>
+  <li>遊戲有音效，在教室裡可用右上角的按鈕關閉。</li>
+</ul>`;
+
+/* ---- 50-stages.js ---- */
+/* ===================== 章節流程 ===================== */
+let STAGE = '';
+const WALK = { on: false };
+let LOOKUP = null, JOY_WAIT = null;
+const TAPS = [];
+const STAGES = {};
+
+function setScene(name) {
+  sceneName = name;
+  activeScene = name === 'temple' ? TEMPLE.scene : name === 'train' ? TRAIN.scene : W.scene;
+}
+async function go(name, opts = {}) {
+  cancelRun(); hooks.reset(); resetUI();
+  STAGE = name; WALK.on = false; LOOKUP = null; JOY_WAIT = null; TAPS.length = 0;
+  if (name !== 'prologue') SND.drone(false);
+  SND.level(SND.rustle, 0, 0.3);
+  if (name !== 'ending' && name !== 'result') SND.level(SND.wind, 0.035, 0.8);
+  try { await STAGES[name](opts); }
+  catch (e) { if (e !== ABORT) console.error(e); }
+}
+const next = (name, opts) => { setTimeout(() => go(name, opts), 0); };
+
+function orbitTree(speed = 0.04, r = 19, h = 4.4, start = 0.9, turn = 0, lookY = 4.6) {
+  let ang = start;
+  const c = W.tree.group.position;
+  const place = () => { camera.position.set(c.x + Math.cos(ang) * r, c.y + h, c.z + Math.sin(ang) * r); camera.lookAt(c.x, c.y + lookY, c.z); if (turn) camera.rotateY(turn); };
+  place();
+  return onUpdate(dt => { ang += dt * speed; place(); });
+}
+
+/* 在 3D 場景裡點選目標（記憶碎片、蓮燈） */
+function pickTarget(list, radius = 80) {
+  return pend(resolve => {
+    let done = false;
+    const fwd = V3();
+    const nearestTo = (x, y, r) => {
+      let best = null, bd = r;
+      for (const it of list) { const sp = toScreen(it.pos); if (!sp.on) continue; const d = Math.hypot(sp.x - x, sp.y - y); if (d < bd) { bd = d; best = it; } }
+      return best;
+    };
+    const off = onUpdate(() => {
+      camera.getWorldDirection(fwd);
+      let best = null, ba = Infinity;
+      for (const it of list) { const a = TMPV2.subVectors(it.pos, camera.position).normalize().angleTo(fwd); if (a < ba) { ba = a; best = it; } }
+      pointTo(best ? best.pos : null);
+    });
+    const choose = it => { if (done) return; done = true; hooks.tap = null; hooks.key = null; off(); pointTo(null); resolve(it); };
+    hooks.tap = (x, y) => { const it = nearestTo(x, y, radius); if (it) choose(it); };
+    hooks.key = (k, down) => {
+      if (!down || (k !== 'Enter' && k !== ' ')) return false;
+      const it = nearestTo(window.innerWidth / 2, window.innerHeight / 2, Math.min(window.innerWidth, window.innerHeight) * 0.35);
+      if (it) choose(it);
+      return true;
+    };
+    if (AUTO) after(wait(0.1), () => choose(list[0]));
+  });
+}
+
+/* ---------- 標題 ---------- */
+STAGES.title = async () => {
+  setScene('world'); resetWorld({ mood: 'may' }); setFadeNow(0);
+  W.fall.source = W.srcGentle; W.fall.rate = 0.9;
+  const portrait = camera.aspect < 1;
+  orbitTree(0.035, portrait ? 21 : 19, 4.4, 0.9, portrait ? -0.07 : -0.24, portrait ? 8.4 : 4.6);
+  $('#title-screen').hidden = false;
+  $('#btn-continue').hidden = !SAVE.cleared;
+};
+
+/* ---------- 序章：佛前的祈願 ---------- */
+STAGES.prologue = async () => {
+  setScene('temple'); TEMPLE.reset(); setFadeNow(1);
+  setLook(TEMPLE.camPos, V3(0, 4.2, -16));
+  SND.drone(true);
+  fade(0, 1.4);
+  await stageCard({ seal: '序', kicker: '序章', title: '佛前的祈願', ref: '對照課文　第一段', goal: '找回三枚記憶碎片，點亮那盞為塵緣準備的燈。' });
+  SND.drone(true);
+  showHUD('序章・佛前的祈願', '第一段');
+  setCounter(cnt('記憶碎片', 0, 3));
+  await say('很久很久以前，你只是一縷心願：想被一個人看見。');
+  await say('這座古寺，收著你前世的記憶。');
+  hideCaption();
+  LOOK.on = true;
+  hint('拖曳畫面環顧四周，點一下發光的記憶碎片。', 8);
+  for (let n = 0; n < 3; n++) {
+    const f = await pickTarget(TEMPLE.frags.filter(x => !x.taken), 85);
+    f.taken = true; hint(null);
+    SND.bell([587.33, 659.25, 783.99][n]);
+    const from = f.mesh.position.clone(), to = V3(), dir = V3();
+    await tween(0.9, e => {
+      to.copy(camera.position).add(camera.getWorldDirection(dir).multiplyScalar(1.8));
+      f.mesh.position.lerpVectors(from, to, e); f.glow.position.copy(f.mesh.position); f.mesh.scale.setScalar(1 - e * 0.7);
+    }, E.in);
+    f.mesh.visible = f.glow.visible = false;
+    setCounter(cnt('記憶碎片', n + 1, 3));
+    await infoCard({ eyebrow: `記憶碎片　${n + 1} / 3`, title: `「${f.key}」`, html: `<p class="prompt">${esc(f.line)}</p><p class="muted">${esc(f.note)}</p>`, buttons: [{ k: 'ok', label: '收下這份記憶', primary: true }] });
+  }
+  LOOK.on = false;
+  await say('三份心意，都找回來了。');
+  await say('池上漂著五百盞蓮燈，其中一盞始終暗著。那是為這段塵緣準備的燈。');
+  hideCaption();
+  LOOK.on = true;
+  TEMPLE.main.state = 'revealed';
+  hint('找到池子中央那盞暗著的燈，點亮它。', 8);
+  await pickTarget([TEMPLE.main], 95);
+  hint(null); LOOK.on = false;
+  const M = TEMPLE.main;
+  M.state = 'lit'; SND.bell(392); SND.chime([523.25, 659.25, 783.99, 1046.5]);
+  await tween(1.3, e => { M.mesh.material.emissive.setRGB(0.95 * e, 0.6 * e, 0.32 * e); M.glow.scale.setScalar(0.01 + e * 3.4); TEMPLE.warm.intensity = 1.5 + e; }, E.out);
+  hint('塵緣：佛教稱人間為「塵世」，塵緣就是人世間的緣分。', 8);
+  M.state = 'rising';
+  const from = M.mesh.position.clone(), to = V3(0, 5.4, -15.3), look = V3();
+  const lookFrom = camera.position.clone().add(camera.getWorldDirection(V3()).multiplyScalar(8));
+  await tween(3.4, e => {
+    M.mesh.position.set(lerp(from.x, to.x, e), lerp(from.y, to.y, E.inOut(e)), lerp(from.z, to.z, e));
+    M.glow.position.copy(M.mesh.position); M.glow.position.y += 0.3;
+    look.lerpVectors(lookFrom, TEMPLE.haloPos, E.inOut(Math.min(1, e * 1.3)));
+    camera.lookAt(look);
+    TEMPLE.haloCore.scale.setScalar(5 + e * 5);
+  }, E.linear);
+  await quiz(Q.pro);
+  await say('佛光落下。你的心願，被聽見了。');
+  hideCaption();
+  SND.whoosh(2.2, 0.16);
+  await fade(1, 1.6, true);
+  SND.drone(false);
+  next('act1', { fromWhite: true });
+};
+
+/* ---------- 第一幕：化樹與盛放 ---------- */
+const HOLD = { dur: 2.0, a: 0.6, b: 0.88 };
+function holdBloom(kb) {
+  return pend(resolve => {
+    let holding = false, prog = 0;
+    const near = (x, y) => { const sp = toScreen(kb.wpos); return sp.on && Math.hypot(sp.x - x, sp.y - y) < 95; };
+    const start = () => { holding = true; prog = 0; const sp = toScreen(kb.wpos); ringShow(sp.x, sp.y); ringSet(0, HOLD.a, HOLD.b); SND.tone(440, 0.25, 'sine', 0.04); };
+    const cleanup = () => { off(); hooks.down = hooks.up = hooks.key = null; pointTo(null); ringHide(); };
+    const release = () => {
+      if (!holding) return;
+      holding = false; ringHide();
+      const sp = toScreen(kb.wpos);
+      if (prog < HOLD.a) { kb.wob = 1; SAVE.early++; SND.low(); floatText('太急了，花苞還沒準備好。', sp.x, sp.y - 80, 'warn', 2.4); }
+      else { cleanup(); resolve('perfect'); }
+    };
+    hooks.down = (x, y) => { if (near(x, y)) { start(); return true; } return false; };
+    hooks.up = () => release();
+    hooks.key = (k, down) => {
+      if (k !== ' ' && k !== 'Enter') return false;
+      if (down && !holding) { if (toScreen(kb.wpos).inView) start(); else hint('先轉動視角，讓發光的花苞出現在畫面上。', 3); }
+      else if (!down) release();
+      return true;
+    };
+    const off = onUpdate(dt => {
+      pointTo(kb.wpos);
+      if (!holding) return;
+      prog += dt / HOLD.dur;
+      const sp = toScreen(kb.wpos); ringShow(sp.x, sp.y); ringSet(prog, HOLD.a, HOLD.b);
+      if (prog >= 1) { holding = false; ringHide(); SAVE.late++; kb.wob = 0.6; SND.low(); floatText('猶豫太久，陽光移走了。再試一次。', sp.x, sp.y - 80, 'warn', 2.6); }
+      else if (prog > HOLD.b && prog - dt / HOLD.dur <= HOLD.b) { /* 剛離開金色區段 */ }
+    });
+    if (AUTO) after(wait(0.1), () => { cleanup(); resolve('perfect'); });
+  });
+}
+function wishCard() {
+  return pend(resolve => {
+    const s = openModal(`<div class="eyebrow">最後一個花苞</div><h2>寫下你自己的盼望</h2>
+      <p class="muted">這朵花開的時候，會浮現你寫的這句話。也可以直接讓它開。</p>
+      <div class="field"><label for="wish-input">我的盼望（20 字以內）</label><input class="input" id="wish-input" maxlength="24" autocomplete="off" placeholder="例如：願你經過時，放慢一點腳步" value="${esc(SAVE.wish)}"></div>
+      <div class="actions"><button class="btn btn-text" id="wish-skip" type="button">直接開花</button><button class="btn btn-primary" id="wish-ok" type="button">寫好了</button></div>`);
+    const inp = s.querySelector('#wish-input');
+    const done = keep => { if (keep) { SAVE.wish = inp.value.trim(); persist(); } closeModal(); resolve(); };
+    s.querySelector('#wish-ok').onclick = () => done(true);
+    s.querySelector('#wish-skip').onclick = () => done(false);
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229) done(true); });
+    if (AUTO) setTimeout(() => { inp.value = '願你經過時，放慢一點腳步'; done(true); }, 30);
+  });
+}
+STAGES.act1 = async (o = {}) => {
+  setScene('world');
+  resetWorld({ growth: 0, bloom: 0, buds: true, keyBuds: true, mood: 'dawn', near: 1.5 });
+  setFadeNow(1, !!o.fromWhite);
+  const soil = V3(W.riseStart.x, TREE_BASE - 0.55, W.riseStart.z);
+  camera.position.copy(soil); camera.lookAt(soil.x - 0.6, soil.y + 3, soil.z - 6);
+  fade(0, 1.6);
+  await stageCard({ seal: '壹', kicker: '第一幕', title: '化樹與盛放', ref: '對照課文　第二段', goal: '扎根在他會經過的路旁，在陽光下慎重地開花。' });
+  showHUD('第一幕・化樹與盛放', '第二段');
+  await say('佛把你化作一棵樹，種在他一定會經過的那條路旁。');
+  hideCaption();
+  SND.whoosh(2.4, 0.12);
+  const look1 = V3(TREE.x - 3, TREE_BASE + 1.5, TREE.z - 12);
+  await camMove(1.8, W.riseStart, look1);
+  const startPos = camera.position.clone(), tgt = V3();
+  await tween(7.5, e => {
+    W.tree.setGrowth(E.inOut(e));
+    const k = sstep(0.05, 0.95, e);
+    camera.position.lerpVectors(startPos, TREE_CAM, k);
+    tgt.lerpVectors(look1, TREE_FWD, k);
+    camera.lookAt(tgt);
+  }, E.linear);
+  W.tree.setGrowth(1);
+  setLook(TREE_CAM, TREE_FWD); LOOK.on = true;
+  setMeter(20);
+  await say('你想往前走，卻發現雙腳已經變成了根。');
+  $('#rooted').hidden = false;
+  hint('試著點點左下角的「移動」。', 7);
+  await pend(resolve => { JOY_WAIT = resolve; after(wait(AUTO ? 0.05 : 7), resolve); });
+  JOY_WAIT = null;
+  await wait(AUTO ? 0 : 1.2);
+  await say('從此，你只能留在原地，轉頭張望。');
+  hideCaption();
+  setCounter(cnt('盛開', 0, 7));
+  const buds = W.tree.keyBuds;
+  for (let i = 0; i < buds.length; i++) {
+    const kb = buds[i];
+    if (i === buds.length - 1) await wishCard();
+    kb.state = 'ready';
+    if (i === 0) hint('陽光照到的花苞會發出金光。找到它，按住不放，等光圈走進金色區段再放開。', 10);
+    else hint('陽光移動了，照到了另一個花苞。', 3);
+    await holdBloom(kb);
+    kb.state = 'done'; hint(null);
+    W.tree.bloomTip(kb.tip, kb.local);
+    SND.chime([659.25, 783.99, 987.77].map(f => f * Math.pow(1.06, i)));
+    const sp = toScreen(kb.wpos);
+    floatText(i === buds.length - 1 ? (SAVE.wish || DEFAULT_WISH) : WISHES[i % WISHES.length], sp.x, sp.y - 50, '', 3.8);
+    SAVE.blooms = i + 1; persist();
+    setCounter(cnt('盛開', i + 1, 7)); setMeter(20 + (i + 1) * 10);
+    setMood(i < 3 ? 'spring' : 'may', 4);
+  }
+  $('#rooted').hidden = true;
+  await wait(1.0);
+  W.tree.budsOn = false; W.tree.bloomRest(2.6);
+  SND.chime([523.25, 659.25, 783.99, 1046.5, 1318.5]); SND.whoosh(2.5, 0.1);
+  await wait(1.6);
+  LOOK.on = false;
+  NEAR.value = 0;
+  await camMove(4.2, V3(TREE.x - 15, TREE_BASE + 4.2, TREE.z + 9), V3(TREE.x, TREE_BASE + 5.4, TREE.z));
+  await say('整棵樹，開滿了白色的花。');
+  await say('花有多少朵，你的心願就有多少個。');
+  hideCaption();
+  await quiz(Q.act1);
+  await fade(1, 1.0);
+  next('act2');
+};
+
+/* ---------- 第二幕：微風的訊號 ---------- */
+function rustleTap() {
+  TAPS.push(performance.now());
+  const b = $('#btn-rustle'); b.classList.add('hit'); setTimeout(() => b.classList.remove('hit'), 90);
+  if (SND.ctx) SND.tone(1800 + Math.random() * 600, 0.08, 'triangle', 0.015);
+}
+STAGES.act2 = async () => {
+  setScene('world');
+  const uStart = U_TREE - 74 / PATH_LEN;
+  resetWorld({ mood: 'afternoon', traveler: true, travelerU: uStart, pose: 'read', near: 1.5 });
+  setFadeNow(1);
+  setLook(TREE_CAM, TREE_FWD); LOOK.on = true;
+  fade(0, 1.2);
+  await stageCard({ seal: '貳', kicker: '第二幕', title: '微風的訊號', ref: '對照課文　第三段（他走近時）', goal: '他正一步步走近。讓葉子顫動，讓他聽見你。' });
+  showHUD('第二幕・微風的訊號', '第三段・他走近時'); setMeter(85);
+  const T = W.trav, dist = () => Math.max(0, (U_TREE - T.u) * PATH_LEN);
+  T.onStep = () => SND.step(clamp(0.16 - dist() * 0.0019, 0.012, 0.16));
+  await say('遠處，傳來了腳步聲。');
+  T.speed = 2.3;
+  await say('是他。', { auto: 1.2 });
+  hideCaption();
+  $('#rustle').hidden = false;
+  hint('連續點「沙沙」讓葉子顫動。他越走越近，節奏要越來越快：讓指針停在金色區段。', 9);
+  hooks.key = (k, down) => { if (k === ' ' && down) { rustleTap(); return true; } return false; };
+  const total = (U_TREE - uStart) * PATH_LEN;
+  let inBand = 0, active = 0;
+  const off = onUpdate(dt => {
+    const remain = dist(), prog = 1 - remain / total;
+    const center = 1.4 + 2.6 * prog, lo = center - 0.75, hi = center + 0.75;
+    const now = performance.now();
+    while (TAPS.length && now - TAPS[0] > 1600) TAPS.shift();
+    const rate = AUTO ? center : TAPS.length / 1.6;
+    const ok = rate >= lo && rate <= hi;
+    active += dt; if (ok) inBand += dt;
+    W.tree.tremble = lerp(W.tree.tremble, clamp(rate / 5, 0, 1.15), Math.min(1, dt * 6));
+    SND.level(SND.rustle, clamp(W.tree.tremble * 0.3, 0, 0.34), 0.08);
+    LOOK.tzoom = ok ? 0.86 : 1;
+    LOOK.shake = W.tree.tremble > 0.55 ? (W.tree.tremble - 0.55) * 2 : 0;
+    gaugeSet(rate, lo, hi);
+    $('#resonance').textContent = `共鳴 ${Math.round((inBand / Math.max(0.01, active)) * 100)}%`;
+    setCounter(`他離你還有 <b>${Math.round(remain / 0.7)}</b> 步`);
+    setMeter(clamp(78 + W.tree.tremble * 20, 0, 100));
+    pointTo(travelerHead(T));
+  });
+  await until(() => dist() < 7.5);
+  off(); hooks.key = null; pointTo(null);
+  T.speed = 0;
+  SAVE.resonance = Math.round((inBand / Math.max(0.01, active)) * 100); persist();
+  $('#rustle').hidden = true; hint(null); LOOK.tzoom = 1; LOOK.shake = 0;
+  W.tree.tremble = 0.8; SND.level(SND.rustle, 0.22, 0.3);
+  setCounter('他就在樹下');
+  await say('他走到樹下了。你全身的葉子，都在顫抖。');
+  hideCaption();
+  await quiz(Q.act2);
+  W.tree.tremble = 0; SND.level(SND.rustle, 0, 0.5);
+  await fade(1, 0.9);
+  next('finale');
+};
+
+/* ---------- 終章：無聲的擦肩 ---------- */
+function friendCard() {
+  return pend(resolve => {
+    const prev = SAVE.friend || {};
+    const s = openModal(`<div class="eyebrow">課堂討論｜最後的稱呼</div><h2>最後一段，為什麼喊了一聲「朋友啊」？</h2>
+      <p class="muted">前面一直稱對方為「你」，最後卻喊他「朋友」。這題沒有標準答案，說得出理由就好。</p>
+      <div class="options">${FRIEND_PICKS.map((p, i) => `<button class="opt${prev.pick === i ? ' picked' : ''}" type="button" data-i="${i}"><span class="k">${i + 1}</span><span><b>${esc(p.k)}</b>　${esc(p.t)}</span></button>`).join('')}</div>
+      <div class="field"><label for="friend-text">我的理由（可略過）</label><textarea class="input" id="friend-text" rows="3" maxlength="200">${esc(prev.text || '')}</textarea></div>
+      <div class="actions"><button class="btn btn-primary" id="friend-ok" type="button">完成</button></div>`);
+    let pick = prev.pick == null ? null : prev.pick;
+    s.querySelectorAll('.opt').forEach(b => { b.onclick = () => { pick = +b.dataset.i; s.querySelectorAll('.opt').forEach(x => x.classList.toggle('picked', x === b)); if (pick === 3) s.querySelector('#friend-text').focus(); }; });
+    s.querySelector('#friend-ok').onclick = () => { SAVE.friend = { pick, text: s.querySelector('#friend-text').value.trim() }; persist(); closeModal(); resolve(); };
+    if (AUTO) setTimeout(() => { s.querySelector('.opt').click(); s.querySelector('#friend-ok').click(); }, 30);
+  });
+}
+STAGES.finale = async () => {
+  setScene('world');
+  resetWorld({ mood: 'afternoon', traveler: true, travelerU: U_TREE - 7.5 / PATH_LEN, pose: 'read' });
+  setFadeNow(1);
+  const T = W.trav;
+  let ang = -2.2;
+  const orbit = () => { const h = travelerHead(T); camera.position.set(h.x + Math.cos(ang) * 4.4, h.y + 0.3, h.z + Math.sin(ang) * 4.4); camera.lookAt(h.x, h.y + 0.45, h.z); };
+  orbit();
+  W.tree.tremble = 0.7;
+  fade(0, 1.2);
+  await stageCard({ seal: '終', kicker: '終章', title: '無聲的擦肩', ref: '對照課文　第三段（他走過之後）', goal: '他沒有抬頭。接住從你身上落下的花。' });
+  showHUD('終章・無聲的擦肩', '第三段・他走過之後'); setMeter(95);
+  T.speed = 0.7; T.onStep = () => SND.step(0.12);
+  const offOrbit = onUpdate(dt => { ang += dt * 0.17; orbit(); W.tree.tremble = Math.max(0.15, W.tree.tremble - dt * 0.05); });
+  await say('他低著頭，看著手上的書。', { auto: 2.2 });
+  await say('一步、兩步……', { auto: 2.0 });
+  await say('他沒有抬頭。', { auto: 2.4 });
+  offOrbit(); hideCaption();
+  T.speed = 1.45; W.tree.tremble = 0; NEAR.value = 1.5;
+  setLook(TREE_CAM, travelerHead(T)); LOOK.on = true;
+  const track = onUpdate(() => { const yp = yawPitch(TREE_CAM, travelerHead(T)); LOOK.ty = LOOK.yaw + wrapAngle(yp.yaw - LOOK.yaw); LOOK.tp = yp.pitch; });
+  $('#stage').classList.add('grey'); setMood('grey', 3.5); SND.level(SND.wind, 0.22, 1.2);
+  await tween(3, e => setMeter(95 * (1 - e)), E.inOut);
+  crackMeter(true); SND.low();
+  await say('他就這樣，走了過去。');
+  track();
+  W.fall.source = W.srcView; W.fall.rate = 4.2; W.fall.terminal = 0.85;
+  await say('花，開始落了。');
+  hideCaption();
+  heartsReset(); $('#hearts').hidden = false;
+  hint('點擊飄落的花，把它們接住。', 8);
+  let caught = 0;
+  const catchAt = (x, y, it) => {
+    W.fall.remove(it); flyShard(x, y, caught); caught++; heartsCount(caught);
+    SND.pluck(820 + caught * 28); if (caught === 1) hint(null);
+  };
+  hooks.tap = (x, y) => { if (caught >= 12) return; const it = W.fall.pick(x, y, 74); if (it) catchAt(x, y, it); };
+  hooks.key = (k, down) => {
+    if (!down || (k !== ' ' && k !== 'Enter')) return false;
+    const it = W.fall.nearestOnScreen(); if (it && caught < 12) { const sp = toScreen(it.p); catchAt(sp.x, sp.y, it); }
+    return true;
+  };
+  if (AUTO) onUpdate(() => { if (caught < 12) { const it = W.fall.items[0]; if (it) { const sp = toScreen(it.p); catchAt(sp.x, sp.y, it); } } });
+  await until(() => caught >= 12);
+  hooks.tap = hooks.key = null;
+  SAVE.caught = Math.max(SAVE.caught, caught); persist();
+  await wait(0.9);
+  $('#hearts').classList.add('whole'); SND.heart();
+  await say('每一朵落花裡，都藏著一片碎掉的心。');
+  hideCaption(); W.fall.rate = 1.6;
+  W.fall.source = W.srcDetach;
+  await quiz(Q.fin1);
+  await quiz(Q.fin2);
+  await friendCard();
+  next('ending');
+};
+
+/* ---------- 第一輪結局 ---------- */
+STAGES.ending = async () => {
+  SAVE.cleared = true; persist();
+  if (sceneName !== 'world') { setScene('world'); resetWorld({ mood: 'grey', grey: true }); }
+  W.fall.source = W.srcDetach; W.fall.rate = 1.2; LOOK.on = false; NEAR.value = 0;
+  camMove(6, V3(TREE.x - 13, TREE_BASE + 6.5, TREE.z - 16), V3(TREE.x - 2, TREE_BASE + 1.5, TREE.z + 4));
+  await wait(2.2);
+  const k = await infoCard({
+    eyebrow: '第一輪結局', title: '花落滿地',
+    html: '<p>從佛前漫長的祈求，到擦肩而過的一瞬間。你把這首詩，完整地走了一遍。</p><p class="muted">二周目已經解鎖：站到路人的位置看這首詩，或親手改寫最後一段。</p>',
+    buttons: [{ k: 'traveler', label: '旅人視角' }, { k: 'workshop', label: '改寫結局工坊' }, { k: 'result', label: '我的成果卡', primary: true }]
+  });
+  next(k);
+};
+
+/* ---------- 二周目大廳 ---------- */
+STAGES.hub = async () => {
+  setScene('world'); resetWorld({ mood: 'may' }); setFadeNow(1); fade(0, 1);
+  W.fall.source = W.srcGentle; W.fall.rate = 0.6;
+  orbitTree(0.03, 20, 4.6, 2.2, 0);
+  showHUD('二周目', null);
+  const doneT = Object.keys(SAVE.travel).length, doneR = Object.keys(SAVE.rewrite).filter(k => SAVE.rewrite[k]).length;
+  const k = await pickCards({
+    eyebrow: '二周目', title: '換個角度，再讀一次',
+    intro: '原著的結局已經走完了。接下來，可以站到另一個位置看這首詩，或親手改寫它。',
+    items: [
+      { k: 'traveler', tag: '換位思考', title: '旅人視角：他為什麼沒有抬頭？', desc: `扮演那個路過的人。已完成 ${doneT} / 4 種處境。`, done: doneT >= 4 },
+      { k: 'workshop', tag: '創作', title: '改寫結局工坊：如果我是作者', desc: `選一樣道具，重寫最後一段。已完成 ${doneR} / 3 種結局。`, done: doneR >= 3 },
+      { k: 'result', tag: '繳交', title: '我的成果卡', desc: '整理闖關紀錄與寫下的文字，可以截圖或複製文字繳交。', alt: true }
+    ],
+    back: '回到標題畫面'
+  });
+  next(k === '__back' ? 'title' : k);
+};
+
+/* ---------- 二周目：旅人視角 ---------- */
+function reflectCard(kind) {
+  return pend(resolve => {
+    const prev = SAVE.travel[kind] || {};
+    const s = openModal(`<div class="eyebrow">旅人視角・${esc(TRAVEL[kind].title)}</div><h2>他沒有抬頭，是他的錯嗎？</h2>
+      <p class="muted">深情的付出，一定能換來對等的回應嗎？選一個最接近你想法的說法，再寫下你的理由。</p>
+      <div class="options">${REFLECT_PICKS.map((t, i) => `<button class="opt${prev.pick === i ? ' picked' : ''}" type="button" data-i="${i}"><span class="k">${i + 1}</span><span>${esc(t)}</span></button>`).join('')}</div>
+      <div class="field"><label for="reflect-text">我的想法（一兩句就好）</label><textarea class="input" id="reflect-text" rows="3" maxlength="200">${esc(prev.text || '')}</textarea></div>
+      <div class="actions"><button class="btn btn-primary" id="reflect-ok" type="button">完成</button></div>`);
+    let pick = prev.pick == null ? null : prev.pick;
+    s.querySelectorAll('.opt').forEach(b => { b.onclick = () => { pick = +b.dataset.i; s.querySelectorAll('.opt').forEach(x => x.classList.toggle('picked', x === b)); }; });
+    s.querySelector('#reflect-ok').onclick = () => { SAVE.travel[kind] = { pick, text: s.querySelector('#reflect-text').value.trim() }; persist(); closeModal(); resolve(); };
+    if (AUTO) setTimeout(() => { s.querySelector('.opt').click(); s.querySelector('#reflect-ok').click(); }, 30);
+  });
+}
+STAGES.traveler = async (o = {}) => {
+  let kind = o.kind;
+  if (!kind) {
+    setScene('world'); resetWorld({ mood: 'may' }); setFadeNow(0);
+    W.fall.source = W.srcGentle; W.fall.rate = 0.5;
+    orbitTree(0.03, 20, 4.6, 2.2, 0);
+    showHUD('二周目・旅人視角', null);
+    kind = await pickCards({
+      eyebrow: '二周目・旅人視角', title: '他為什麼沒有抬頭？',
+      intro: '這一次，換你當那個路過的人。選一種處境，走過那棵樹。',
+      items: ['rain', 'hurry', 'heart', 'train'].map(k => ({ k, tag: TRAVEL[k].tag, title: TRAVEL[k].title, desc: TRAVEL[k].desc, done: !!SAVE.travel[k], alt: k === 'train' })),
+      back: '回到二周目', autoPick: o.autoPick
+    });
+    if (kind === '__back') return next('hub');
+  }
+  hooks.reset();
+  if (kind === 'train') return trainRide();
+  const D = TRAVEL[kind];
+  await fade(1, 0.6);
+  UPDATERS.clear();
+  setScene('world');
+  resetWorld({ mood: D.mood, traveler: true, travelerU: U_TREE - 19 / PATH_LEN, pose: D.pose, rain: kind === 'rain' });
+  const T = W.trav, camPos = V3(), look = V3();
+  const follow = (dt, snap) => {
+    const p = T.g.position, tan = PATH.getTangentAt(clamp(T.u, 0, 1));
+    camPos.set(p.x - tan.x * 3.6, p.y + 2.4, p.z - tan.z * 3.6);
+    if (snap) camera.position.copy(camPos); else camera.position.lerp(camPos, Math.min(1, dt * 4));
+    look.set(p.x + tan.x * 6, p.y + (kind === 'rain' ? 0.9 : 1.2), p.z + tan.z * 6);
+    camera.lookAt(look);
+  };
+  follow(0, true);
+  fade(0, 0.8);
+  showHUD('二周目・旅人視角', null);
+  if (kind === 'hurry') $('#vignette').hidden = false;
+  if (kind === 'heart') $('#thought').hidden = false;
+  await say(D.intro);
+  hideCaption();
+  $('#btn-walk').hidden = false; $('#btn-lookup').hidden = false;
+  hint('按住「往前走」前進。也試試看「抬頭」。', 8);
+  let bump = 0;
+  LOOKUP = () => {
+    bump = 1; SND.low();
+    const r = $('#btn-lookup').getBoundingClientRect();
+    floatText(D.lookup, r.left + r.width / 2, r.top - 40, 'warn', 2.6);
+  };
+  T.onStep = () => SND.step(0.1);
+  const off = onUpdate(dt => {
+    const target = WALK.on || AUTO ? D.speed : 0;
+    T.speed = lerp(T.speed, target, Math.min(1, dt * 3));
+    follow(dt);
+    if (bump > 0) { bump = Math.max(0, bump - dt * 1.5); camera.rotateX(Math.sin(bump * Math.PI) * 0.2); }
+  });
+  await until(() => T.u > U_TREE + 7 / PATH_LEN);
+  off(); LOOKUP = null; WALK.on = false; hint(null);
+  $('#btn-walk').hidden = true; $('#btn-lookup').hidden = true; $('#vignette').hidden = true; $('#thought').hidden = true;
+  T.speed = 1.1;
+  const keepFollow = onUpdate(dt => follow(dt));
+  await say(D.after);
+  keepFollow(); hideCaption();
+  if (kind === 'rain') setMood('may', 3);
+  await camMove(3.4, V3(TREE.x - 9, TREE_BASE + 3.5, TREE.z + 14), V3(TREE.x, TREE_BASE + 5.2, TREE.z));
+  W.rain.lines.visible = false;
+  await say('你錯過的，是一整樹的花。');
+  hideCaption();
+  await reflectCard(kind);
+  next('traveler');
+};
+async function trainRide() {
+  await fade(1, 0.6);
+  UPDATERS.clear();
+  buildTrain();
+  setScene('train');
+  $('#train-window').hidden = false;
+  const speed = 13;
+  let x = TRAIN.x0;
+  TRAIN.place(x);
+  fade(0, 0.8);
+  showHUD('二周目・旅人視角', null);
+  after(say('這一次，你坐在火車上，穿過苗栗的山。', { auto: 3 }), hideCaption);
+  SND.level(SND.wind, 0.12, 0.5);
+  let clack = 0;
+  const off = onUpdate(dt => {
+    x = Math.min(TRAIN.x1, x + dt * speed); TRAIN.place(x);
+    clack += dt; if (clack > 0.6) { clack = 0; SND.step(0.06); setTimeout(() => SND.step(0.05), 120); }
+  });
+  await until(() => x >= TRAIN.x1);
+  off(); SND.level(SND.wind, 0.035, 1);
+  await say('那棵樹一閃而過。列車轉了個彎，就再也看不見了。');
+  hideCaption();
+  $('#train-window').hidden = true;
+  await infoCard({
+    eyebrow: '創作背景', title: '原來，作者也曾是那個路過的人', wide: true,
+    html: '<p>據作者回憶，這首詩寫於 1980 年。那年五月，她搭火車經過苗栗山間，出了山洞後偶然回頭，看見山坡上一棵開滿白花的油桐樹，還來不及細看，就隨著列車轉彎消失在視線外。</p><p>她形容這首詩是獻給大自然的情詩；至於多數讀者把它讀成等待愛情的詩，她也認為讀者的解讀同樣成立。</p>',
+    buttons: [{ k: 'ok', label: '寫下我的想法', primary: true }]
+  });
+  await reflectCard('train');
+  next('traveler');
+}
+
+/* ---------- 二周目：改寫結局工坊 ---------- */
+function writeCard(kind) {
+  const D = REWRITE[kind];
+  return pend(resolve => {
+    const prev = SAVE.rewrite[kind] || '';
+    const s = openModal(`<div class="eyebrow">改寫結局工坊・${esc(D.tag)}</div><h2>寫下你的新結局</h2><p>${esc(D.task)}</p>
+      <div class="field"><label for="write-text">我的新結局（4～6 行，一行寫一句）</label><textarea class="lined" id="write-text" maxlength="300">${esc(prev)}</textarea><span class="note" id="write-count"></span></div>
+      <div class="field"><span class="note">句型參考：點一下就會放進上面的格子</span><div class="frames">${D.frames.map(f => `<button class="frame-chip" type="button">${esc(f)}</button>`).join('')}</div></div>
+      <details><summary>看看範例</summary><p class="poem">${esc(D.sample.join('\n'))}</p></details>
+      <div class="actions spread"><button class="btn btn-text" id="write-replay" type="button">再看一次動畫</button><button class="btn btn-primary" id="write-ok" type="button">放進成果卡</button></div>`, { wide: true });
+    const ta = s.querySelector('#write-text'), counter = s.querySelector('#write-count');
+    const upd = () => { const n = ta.value.split('\n').filter(l => l.trim()).length; counter.textContent = `目前 ${n} 行`; };
+    ta.addEventListener('input', upd); upd();
+    s.querySelectorAll('.frame-chip').forEach(b => { b.onclick = () => { const v = ta.value; ta.value = v + (v && !v.endsWith('\n') ? '\n' : '') + b.textContent; ta.focus(); upd(); }; });
+    const save = () => { SAVE.rewrite[kind] = ta.value.trim(); persist(); closeModal(); };
+    s.querySelector('#write-ok').onclick = () => { save(); resolve('ok'); };
+    s.querySelector('#write-replay').onclick = () => { save(); resolve('replay'); };
+    if (AUTO) setTimeout(() => { ta.value = D.sample.join('\n'); s.querySelector('#write-ok').click(); }, 30);
+  });
+}
+async function cineWind() {
+  setScene('world');
+  resetWorld({ mood: 'afternoon', traveler: true, travelerU: U_TREE - 10 / PATH_LEN, pose: 'read' });
+  const T = W.trav;
+  camera.position.set(TREE.x - 10, TREE_BASE + 2.4, TREE.z - 5.5);
+  camera.lookAt(travelerHead(T));
+  fade(0, 0.8);
+  showHUD('二周目・改寫結局', null);
+  T.speed = 1.2; T.onStep = () => SND.step(0.08);
+  const lookT = V3();
+  const track = onUpdate(dt => { lookT.lerp(travelerHead(T), Math.min(1, dt * 3)); camera.lookAt(lookT); });
+  lookT.copy(travelerHead(T));
+  await say('他又一次走近了。這一次，你決定不再只是等待。', { auto: 2.4 });
+  await until(() => T.u > U_TREE - 1.6 / PATH_LEN);
+  SND.whoosh(2.4, 0.3);
+  W.tree.tremble = 1; W.fall.gust = 3; W.fall.wind.set(-1.1, 0, 0.25);
+  for (let i = 0; i < 45; i++) {
+    const b = W.tree.detachRandom();
+    if (b) W.fall.spawn(b.p.clone().add(W.tree.group.position), b.s, b.q, V3(-1.6 - Math.random() * 1.2, 0.3 + Math.random() * 0.4, (Math.random() - 0.5) * 0.8));
+  }
+  await say('一陣風，把一朵花吹落在他的肩上。', { auto: 2.4 });
+  T.flower.visible = true; T.speed = 0;
+  await wait(0.5);
+  setTravelerPose(T, 'up'); T.book.visible = true;
+  track();
+  W.tree.tremble = 0.2; W.fall.gust = 0; W.fall.wind.set(0.22, 0, 0.12);
+  await wait(1.0);
+  const eye = travelerHead(T);
+  await camMove(3.4, V3(eye.x - 0.5, eye.y + 0.15, eye.z + 1.3), V3(TREE.x - 0.6, TREE_BASE + 6.4, TREE.z), E.inOut);
+  setMood('may', 3);
+  SND.chime([523.25, 659.25, 783.99, 1046.5]);
+  await say('他停下腳步，抬起了頭。', { auto: 2.6 });
+  hideCaption();
+  await wait(1.0);
+}
+async function cineBird() {
+  setScene('world');
+  resetWorld({ mood: 'afternoon', traveler: true, travelerU: U_TREE - 4 / PATH_LEN, pose: 'read' });
+  const T = W.trav, B = W.bird, base = W.tree.group.position;
+  B.g.visible = true; B.g.position.set(base.x - 1.2, base.y + 6.6, base.z); B.g.scale.setScalar(0.01); B.flap = 1;
+  camera.position.set(TREE.x - 11, TREE_BASE + 4, TREE.z + 4); camera.lookAt(TREE.x - 1.5, TREE_BASE + 5.2, TREE.z);
+  fade(0, 0.8);
+  showHUD('二周目・改寫結局', null);
+  await say('這一次，你向佛祈求的，不是成為一棵樹。', { auto: 2.4 });
+  SND.chime([783.99, 987.77, 1174.66]);
+  await tween(1.4, e => { B.g.scale.setScalar(Math.max(0.01, E.outBack(e) * 1.7)); }, E.linear);
+  await say('你化作一隻鳥，飛到他的身邊。', { auto: 2.2 });
+  T.speed = 1.3; T.onStep = () => SND.step(0.07);
+  const target = V3(), cp = V3(), side = V3();
+  const lookAtP = V3();
+  onUpdate(dt => {
+    const h = travelerHead(T), tan = PATH.getTangentAt(clamp(T.u, 0, 1));
+    side.set(-tan.z, 0, tan.x);
+    target.set(h.x - side.x * 0.9 + tan.x * 0.3, h.y + 0.55 + Math.sin(W.time * 2.2) * 0.15, h.z - side.z * 0.9 + tan.z * 0.3);
+    B.g.position.lerp(target, Math.min(1, dt * 1.6));
+    B.g.lookAt(B.g.position.x + tan.x, B.g.position.y, B.g.position.z + tan.z);
+    cp.set(h.x - side.x * 3.6 - tan.x * 1.6, h.y + 0.6, h.z - side.z * 3.6 - tan.z * 1.6);
+    camera.position.lerp(cp, Math.min(1, dt * 1.2));
+    lookAtP.set((h.x + B.g.position.x) / 2 + tan.x * 1.2, (h.y + B.g.position.y) / 2, (h.z + B.g.position.z) / 2 + tan.z * 1.2);
+    camera.lookAt(lookAtP);
+  });
+  await wait(3.2);
+  T.headPitch = 0.05;
+  await say('你們一起走過一段又一段的路。', { auto: 2.6 });
+  setMood('autumn', 5);
+  await wait(3.5);
+  hideCaption();
+}
+async function cineSeasons() {
+  setScene('world');
+  resetWorld({ mood: 'may' });
+  const c = W.tree.group.position;
+  let ang = 0.5;
+  const place = () => { camera.position.set(c.x + Math.cos(ang) * 17, c.y + 4.5, c.z + Math.sin(ang) * 17); camera.lookAt(c.x, c.y + 4.3, c.z); };
+  place(); onUpdate(dt => { ang += dt * 0.07; place(); });
+  fade(0, 0.8);
+  showHUD('二周目・改寫結局', null);
+  await say('他走遠了。花，一朵一朵落盡。', { auto: 1.6 });
+  W.fall.rate = 70;
+  await until(() => W.tree.bloomedCount() < 60);
+  W.tree.setBloomAll(0); W.fall.rate = 0;
+  await say('花落盡的那天，你沒有倒下。', { auto: 2.2 });
+  setMood('afternoon', 2);
+  await tween(2.2, e => { W.tree.folScale = 1 + e * 0.35; W.tree.dirty = true; });
+  const T = W.trav; T.g.visible = true; T.free = true; setTravelerPose(T, 'read'); T.speed = 0;
+  T.g.position.set(c.x - 2.4, groundAt(c.x - 2.4, c.z + 1.2) + 0.02, c.z + 1.2); T.g.lookAt(c.x + 4, T.g.position.y, c.z + 6);
+  await say('夏天，你把樹蔭留給趕路的人歇腳。', { auto: 2.6 });
+  T.g.visible = false;
+  setMood('autumn', 2.5);
+  await tween(2.5, e => W.tree.setFoliageTint(e), E.linear);
+  W.nest.visible = true; W.leafFall.rate = 7;
+  await say('秋天，鳥兒在你的枝頭築巢。', { auto: 2.6 });
+  W.leafFall.rate = 0; setMood('spring', 2.5);
+  await tween(2.5, e => { W.tree.setFoliageTint(1 - e); W.wild.set(e); W.tree.folScale = 1.35 - e * 0.35; W.tree.dirty = true; }, E.linear);
+  W.tree.budsOn = true; W.tree.dirty = true;
+  await say('落下的花化成春泥，樹下開滿了新的野花。', { auto: 2.8 });
+  hideCaption();
+}
+STAGES.workshop = async (o = {}) => {
+  let kind = o.kind;
+  if (!kind) {
+    setScene('world'); resetWorld({ mood: 'may' }); setFadeNow(0);
+    W.fall.source = W.srcGentle; W.fall.rate = 0.5;
+    orbitTree(0.03, 20, 4.6, 2.2, 0);
+    showHUD('二周目・改寫結局工坊', null);
+    kind = await pickCards({
+      eyebrow: '二周目・改寫結局工坊', title: '如果你是作者，會怎麼寫最後一段？',
+      intro: '選一樣道具，重新演一次他走過的那一刻，再寫下你的新結局。',
+      items: ['wind', 'bird', 'seasons'].map(k => ({ k, tag: REWRITE[k].tag, title: REWRITE[k].title, desc: REWRITE[k].desc, done: !!SAVE.rewrite[k] })),
+      back: '回到二周目', autoPick: o.autoPick
+    });
+    if (kind === '__back') return next('hub');
+  }
+  hooks.reset();
+  let r = 'replay';
+  while (r === 'replay') {
+    await fade(1, 0.6);
+    UPDATERS.clear();
+    if (kind === 'wind') await cineWind(); else if (kind === 'bird') await cineBird(); else await cineSeasons();
+    r = await writeCard(kind);
+  }
+  next('workshop');
+};
+
+/* ---------- 成果卡 ---------- */
+function resultText() {
+  const ok = Q_IDS.filter(id => SAVE.answers[id] === true).length;
+  const L = ['《五百年的守候》成果卡', `班級座號／姓名：${SAVE.name || '（未填）'}`, '',
+    `過關提問一次答對：${ok} / 5`, `慎重開花：${SAVE.blooms} / 7`, `第二幕共鳴率：${SAVE.resonance == null ? '未完成' : SAVE.resonance + '%'}`, `接住的落花：${SAVE.caught} 朵`, '',
+    '【我的盼望】', SAVE.wish || '（未寫）', '',
+    '【「朋友啊」我的看法】'];
+  if (SAVE.friend && SAVE.friend.pick != null) L.push(FRIEND_PICKS[SAVE.friend.pick].k + '：' + FRIEND_PICKS[SAVE.friend.pick].t);
+  if (SAVE.friend && SAVE.friend.text) L.push('理由：' + SAVE.friend.text);
+  if (!SAVE.friend) L.push('（未完成）');
+  L.push('', '【旅人視角】');
+  const tk = Object.keys(SAVE.travel);
+  if (!tk.length) L.push('（未完成）');
+  tk.forEach(k => { const t = SAVE.travel[k]; L.push(`${TRAVEL[k].title}｜${t.pick == null ? '未選擇' : REFLECT_PICKS[t.pick]}${t.text ? '｜' + t.text : ''}`); });
+  L.push('', '【改寫結局】');
+  const rk = Object.keys(SAVE.rewrite).filter(k => SAVE.rewrite[k]);
+  if (!rk.length) L.push('（未完成）');
+  rk.forEach(k => { L.push(`〈${REWRITE[k].tag}〉`, SAVE.rewrite[k], ''); });
+  return L.join('\n').trim();
+}
+function resultHTML() {
+  const ok = Q_IDS.filter(id => SAVE.answers[id] === true).length;
+  const fr = SAVE.friend;
+  const friend = fr && (fr.pick != null || fr.text)
+    ? `${fr.pick != null ? `<p><b>${esc(FRIEND_PICKS[fr.pick].k)}</b>　${esc(FRIEND_PICKS[fr.pick].t)}</p>` : ''}${fr.text ? `<p>${esc(fr.text)}</p>` : ''}`
+    : '<p class="empty">終章結束時會請你寫下看法。</p>';
+  const tk = Object.keys(SAVE.travel);
+  const travel = tk.length ? tk.map(k => { const t = SAVE.travel[k]; return `<p><b>${esc(TRAVEL[k].title)}</b>　${t.pick == null ? '' : esc(REFLECT_PICKS[t.pick])}${t.text ? `<br>${esc(t.text)}` : ''}</p>`; }).join('') : '<p class="empty">還沒走過二周目的旅人視角。</p>';
+  const rk = Object.keys(SAVE.rewrite).filter(k => SAVE.rewrite[k]);
+  const rewrite = rk.length ? rk.map(k => `<p><b>〈${esc(REWRITE[k].tag)}〉</b></p><p class="poem">${esc(SAVE.rewrite[k])}</p>`).join('') : '<p class="empty">還沒在改寫結局工坊寫下新結局。</p>';
+  return `<div class="result-head"><div class="seal" aria-hidden="true">桐</div><div><div class="eyebrow">五百年的守候</div><h2>我的成果卡</h2></div></div>
+    <div class="field"><label for="student-name">班級座號／姓名</label><input class="input" id="student-name" maxlength="30" autocomplete="off" value="${esc(SAVE.name)}" placeholder="例如：802 班 15 號 王小明"></div>
+    <div class="stats">
+      <div class="stat"><span>過關提問一次答對</span><b>${ok} / 5</b></div>
+      <div class="stat"><span>慎重開花</span><b>${SAVE.blooms} / 7</b></div>
+      <div class="stat"><span>第二幕共鳴率</span><b>${SAVE.resonance == null ? '—' : SAVE.resonance + '%'}</b></div>
+      <div class="stat"><span>接住的落花</span><b>${SAVE.caught} 朵</b></div>
+    </div>
+    <div class="rblock"><h3>我的盼望</h3>${SAVE.wish ? `<p>${esc(SAVE.wish)}</p>` : '<p class="empty">第一幕最後一個花苞，可以寫下自己的盼望。</p>'}</div>
+    <div class="rblock"><h3>「朋友啊」我的看法</h3>${friend}</div>
+    <div class="rblock"><h3>旅人視角</h3>${travel}</div>
+    <div class="rblock"><h3>改寫結局</h3>${rewrite}</div>
+    <p class="note">這張卡只存在這台裝置的瀏覽器裡。完成後請截圖，或按「複製文字」貼到老師指定的地方。</p>
+    <div class="actions spread"><button class="btn btn-text" id="res-reset" type="button">清除紀錄重新開始</button><div class="row"><button class="btn" id="res-copy" type="button">複製文字</button><button class="btn btn-primary" id="res-back" type="button">返回</button></div></div>`;
+}
+function bindResult(s, onBack, onReset) {
+  const name = s.querySelector('#student-name');
+  name.addEventListener('input', () => { SAVE.name = name.value.trim(); persist(); });
+  const copyBtn = s.querySelector('#res-copy');
+  copyBtn.onclick = () => {
+    const text = resultText();
+    const ok = () => { copyBtn.textContent = '已複製'; setTimeout(() => { copyBtn.textContent = '複製文字'; }, 2200); };
+    const fallback = () => {
+      let ta = s.querySelector('#copy-fallback');
+      if (!ta) { ta = document.createElement('textarea'); ta.id = 'copy-fallback'; ta.className = 'input'; ta.rows = 10; ta.readOnly = true; ta.setAttribute('aria-label', '成果卡文字'); s.appendChild(ta); }
+      ta.value = text; ta.focus(); ta.select(); copyBtn.textContent = '請複製下方文字';
+    };
+    try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok, fallback); else fallback(); } catch (e) { fallback(); }
+  };
+  s.querySelector('#res-back').onclick = onBack;
+  const rb = s.querySelector('#res-reset');
+  let armed = false;
+  rb.onclick = () => {
+    if (!armed) { armed = true; rb.textContent = '確定清除？再按一次'; rb.style.color = 'var(--tung)'; setTimeout(() => { armed = false; rb.textContent = '清除紀錄重新開始'; rb.style.color = ''; }, 4000); return; }
+    SAVE = blankSave(); persist(); onReset();
+  };
+}
+STAGES.result = async () => {
+  if (!activeScene) { setScene('world'); resetWorld({ mood: 'may' }); orbitTree(0.03, 20, 4.6, 2.2, 0); }
+  await pend(resolve => {
+    const s = openModal(resultHTML(), { wide: true });
+    bindResult(s, () => { closeModal(); resolve(); }, () => { closeModal(); next('title'); });
+  });
+  next(SAVE.cleared ? 'hub' : 'title');
+};
+
+/* ---------- 選單（暫停遊戲） ---------- */
+function openMenu(html, wide) {
+  const m = $('#menu'), s = $('#menu-sheet');
+  s.className = 'sheet' + (wide ? ' wide' : '');
+  s.innerHTML = html; m.hidden = false; s.scrollTop = 0;
+  return s;
+}
+function closeMenu() { $('#menu').hidden = true; $('#menu-sheet').innerHTML = ''; }
+function showMenu() {
+  const s = openMenu(`<div class="eyebrow">選單</div><h2>暫停中</h2><div class="menu-list">
+    <button class="btn btn-primary" type="button" data-m="close">繼續遊戲</button>
+    <button class="btn" type="button" data-m="chapters">選擇章節</button>
+    <button class="btn" type="button" data-m="result">我的成果卡</button>
+    <button class="btn" type="button" data-m="teacher">給老師的說明</button>
+    <button class="btn" type="button" data-m="title">回到標題畫面</button></div>`);
+  s.querySelectorAll('[data-m]').forEach(b => {
+    b.onclick = () => {
+      const k = b.dataset.m;
+      if (k === 'close') closeMenu();
+      else if (k === 'chapters') showChapters();
+      else if (k === 'result') { const r = openMenu(resultHTML(), true); bindResult(r, closeMenu, () => { closeMenu(); go('title'); }); }
+      else if (k === 'teacher') showTeacher();
+      else if (k === 'title') { closeMenu(); go('title'); }
+    };
+  });
+  setTimeout(() => s.querySelector('[data-m="close"]').focus({ preventScroll: true }), 50);
+}
+function showChapters() {
+  const s = openMenu(`<div class="eyebrow">選擇章節</div><h2>從哪裡開始？</h2>
+    <p class="muted">上課時可以直接跳到要討論的關卡。二周目平常要破關才會開放，從這裡可以直接進入。</p>
+    <div class="cards">${CHAPTERS.map(c => `<button class="card" type="button" data-k="${c.k}"><span class="tag">${esc(c.tag)}</span><h3>${esc(c.title)}</h3><p>${esc(c.desc)}</p></button>`).join('')}</div>
+    <div class="actions"><button class="btn btn-text" type="button" data-k="__close">關閉</button></div>`, true);
+  s.querySelectorAll('[data-k]').forEach(b => { b.onclick = () => { closeMenu(); if (b.dataset.k !== '__close') { SND.init(); go(b.dataset.k); } }; });
+}
+function showTeacher() {
+  const s = openMenu(`<div class="eyebrow">給老師的說明</div><h2>《五百年的守候》怎麼用</h2>${TEACHER_HTML}
+    <div class="actions"><button class="btn btn-primary" type="button" id="teacher-close">知道了</button></div>`, true);
+  s.querySelector('#teacher-close').onclick = closeMenu;
+}
+
+/* ---- 90-main.js ---- */
+/* ===================== 主程式：輸入、迴圈、啟動 ===================== */
+const PTR = { id: null, x0: 0, y0: 0, x: 0, y: 0, t0: 0, moved: false, captured: false };
+const KEYS = new Set();
+let MENU_EL = null;
+
+function bindInput() {
+  const cv = $('#stage');
+  cv.addEventListener('pointerdown', e => {
+    if (PTR.id !== null) return;
+    PTR.id = e.pointerId; PTR.x0 = PTR.x = e.clientX; PTR.y0 = PTR.y = e.clientY; PTR.t0 = performance.now(); PTR.moved = false;
+    try { cv.setPointerCapture(e.pointerId); } catch (err) { /* 舊瀏覽器 */ }
+    PTR.captured = hooks.down ? !!hooks.down(e.clientX, e.clientY) : false;
+    SND.init();
+  });
+  cv.addEventListener('pointermove', e => {
+    if (e.pointerId !== PTR.id) return;
+    const dx = e.clientX - PTR.x, dy = e.clientY - PTR.y;
+    PTR.x = e.clientX; PTR.y = e.clientY;
+    if (!PTR.moved && Math.hypot(PTR.x - PTR.x0, PTR.y - PTR.y0) > 8) PTR.moved = true;
+    if (LOOK.on && !PTR.captured && PTR.moved) {
+      const sens = (Math.PI * 1.1) / Math.max(window.innerWidth, window.innerHeight);
+      LOOK.ty += dx * sens; LOOK.tp = clamp(LOOK.tp + dy * sens, LOOK.minP, LOOK.maxP);
+    }
+  });
+  cv.addEventListener('pointerup', e => {
+    if (e.pointerId !== PTR.id) return;
+    const was = PTR.captured; PTR.id = null; PTR.captured = false;
+    if (was) { if (hooks.up) hooks.up(); return; }
+    if (!PTR.moved && performance.now() - PTR.t0 < 500) { if (hooks.tap) hooks.tap(e.clientX, e.clientY); else if (captionAdvance) captionAdvance(); }
+  });
+  cv.addEventListener('pointercancel', e => {
+    if (e.pointerId !== PTR.id) return;
+    const was = PTR.captured; PTR.id = null; PTR.captured = false;
+    if (was && hooks.up) hooks.up();
+  });
+  cv.addEventListener('contextmenu', e => e.preventDefault());
+
+  window.addEventListener('keydown', e => {
+    const tag = e.target && e.target.tagName, k = e.key;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    if (!MENU_EL.hidden) { if (k === 'Escape') closeMenu(); return; }
+    if (!$('#modal').hidden) return;
+    if (tag === 'BUTTON' && (k === ' ' || k === 'Enter')) return;
+    if (k === 'Escape' && STAGE !== 'title') { showMenu(); return; }
+    if (stageCardClose && (k === 'Enter' || k === ' ')) { e.preventDefault(); stageCardClose(true); return; }
+    if (captionAdvance && (k === 'Enter' || k === ' ')) { e.preventDefault(); if (!e.repeat) captionAdvance(); return; }
+    if (e.repeat) { if (k.indexOf('Arrow') === 0 || k === ' ') e.preventDefault(); return; }
+    if (hooks.key && hooks.key(k, true)) { e.preventDefault(); return; }
+    const lk = k.toLowerCase();
+    if (['arrowleft', 'arrowright', 'arrowup', 'arrowdown', 'w'].indexOf(lk) >= 0) {
+      KEYS.add(lk); e.preventDefault();
+      if ((lk === 'arrowup' || lk === 'w') && !$('#btn-walk').hidden) WALK.on = true;
+    }
+  });
+  window.addEventListener('keyup', e => {
+    const lk = e.key.toLowerCase();
+    KEYS.delete(lk);
+    if (lk === 'arrowup' || lk === 'w') WALK.on = false;
+    if (hooks.key) hooks.key(e.key, false);
+  });
+  window.addEventListener('blur', () => { KEYS.clear(); WALK.on = false; });
+}
+
+function syncSoundBtn() {
+  const m = !!SAVE.muted;
+  $$('#btn-sound .snd-on').forEach(p => { p.style.display = m ? 'none' : ''; });
+  $('#btn-sound .snd-off').style.display = m ? '' : 'none';
+  $('#btn-sound').setAttribute('aria-label', m ? '開啟聲音' : '關閉聲音');
+}
+function bindUI() {
+  MENU_EL = $('#menu');
+  $('#caption').addEventListener('click', () => { if (captionAdvance) captionAdvance(); });
+  document.addEventListener('click', () => SND.init(), { capture: true, once: true });
+  $('#btn-sound').addEventListener('click', () => { SAVE.muted = !SAVE.muted; persist(); SND.init(); SND.setMuted(SAVE.muted); syncSoundBtn(); });
+  $('#btn-menu').addEventListener('click', () => showMenu());
+  $('#btn-joy').addEventListener('click', () => {
+    const b = $('#btn-joy'); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake');
+    SND.low();
+    const r = b.getBoundingClientRect();
+    floatText('根已經扎進土裡，走不了了。', r.left + r.width / 2 + 100, r.top - 30, 'warn', 2.6);
+    hint(null);
+    if (JOY_WAIT) { const f = JOY_WAIT; JOY_WAIT = null; f(); }
+  });
+  const rb = $('#btn-rustle');
+  rb.addEventListener('pointerdown', e => { e.preventDefault(); rustleTap(); });
+  rb.addEventListener('click', e => { if (e.detail === 0) rustleTap(); });
+  const wb = $('#btn-walk');
+  const walkOff = () => { WALK.on = false; wb.classList.remove('down'); };
+  wb.addEventListener('pointerdown', e => { e.preventDefault(); WALK.on = true; wb.classList.add('down'); try { wb.setPointerCapture(e.pointerId); } catch (err) { /* 舊瀏覽器 */ } });
+  wb.addEventListener('pointerup', walkOff); wb.addEventListener('pointercancel', walkOff); wb.addEventListener('lostpointercapture', walkOff);
+  wb.addEventListener('contextmenu', e => e.preventDefault());
+  $('#btn-lookup').addEventListener('click', () => { if (LOOKUP) LOOKUP(); });
+  $('#btn-start').addEventListener('click', () => { SND.init(); SND.setMuted(!!SAVE.muted); go('prologue'); });
+  $('#btn-continue').addEventListener('click', () => { SND.init(); SND.setMuted(!!SAVE.muted); go('hub'); });
+  $('#btn-chapters').addEventListener('click', () => showChapters());
+  $('#btn-teacher').addEventListener('click', () => showTeacher());
+  MENU_EL.addEventListener('click', e => { if (e.target === MENU_EL) closeMenu(); });
+  window.addEventListener('resize', onResize);
+  document.addEventListener('visibilitychange', () => {
+    if (!SND.ctx) return;
+    if (document.hidden) SND.ctx.suspend(); else SND.ctx.resume();
+  });
+}
+
+let LAST = 0, FRAME_ERR = false, FRAMES = 0, NO_RENDER = false;
+function frame(now) {
+  requestAnimationFrame(frame);
+  FRAMES++;
+  let dt = LAST ? Math.min(0.05, (now - LAST) / 1000) : 0.016;
+  LAST = now;
+  if (MENU_EL.hidden) {
+    dt *= SPEED;
+    W.time += dt;
+    stepTweens(dt); stepWaiters(); stepUpdaters(dt);
+    if (KEYS.size && LOOK.on) {
+      if (KEYS.has('arrowleft')) LOOK.ty += dt * 1.7;
+      if (KEYS.has('arrowright')) LOOK.ty -= dt * 1.7;
+      if (KEYS.has('arrowup')) LOOK.tp = clamp(LOOK.tp + dt * 1.2, LOOK.minP, LOOK.maxP);
+      if (KEYS.has('arrowdown')) LOOK.tp = clamp(LOOK.tp - dt * 1.2, LOOK.minP, LOOK.maxP);
+    }
+    try {
+      if (sceneName === 'world') updateWorld(dt * W.timeScale, W.time);
+      else if (sceneName === 'temple') TEMPLE.update(dt, W.time);
+      else if (sceneName === 'train' && TRAIN.update) TRAIN.update(dt, W.time);
+    } catch (err) { if (!FRAME_ERR) { FRAME_ERR = true; console.error(err); } }
+    updateLook(dt);
+  }
+  camera.updateMatrixWorld();
+  if (activeScene && !NO_RENDER) renderer.render(activeScene, camera);
+}
+
+function fatal(msg) { const f = $('#fatal'); f.innerHTML = `<p>${esc(msg)}</p>`; f.hidden = false; }
+function start(data) {
+  loadSave();
+  if (data && data.save) SAVE = Object.assign(blankSave(), data.save);
+  SND.muted = !!SAVE.muted;
+  syncSoundBtn();
+  bindUI();
+  if (!window.THREE) { fatal('3D 引擎沒有載入成功。請確認網路連線，再重新整理頁面。'); return; }
+  initThreeGlobals();
+  try { initRenderer(); } catch (e) { fatal('這台裝置的瀏覽器無法顯示 3D 畫面（WebGL）。請改用較新版的 Safari 或 Chrome 再試一次。'); return; }
+  setTimeout(() => {
+    try { buildWorld(); buildTemple(); buildHearts(); }
+    catch (e) { console.error(e); fatal('畫面建立時發生問題，請重新整理頁面。'); return; }
+    bindInput();
+    setScene('world'); applyFov(true);
+    requestAnimationFrame(frame);
+    go('title');
+    const b = $('#btn-start'); b.disabled = false; b.textContent = '開始遊戲';
+  }, 30);
+}
+try { if (window.claude && window.claude.hot && window.claude.hot.snapshot) window.claude.hot.snapshot(() => ({ save: SAVE })); } catch (e) { /* 非 Claude 檢視器 */ }
+(function boot() {
+  const hot = window.claude && window.claude.hot;
+  if (hot && hot.ready) hot.ready(start); else start(hot && hot.data ? hot.data : {});
+})();
+/* 只在本機檔案測試時開放的除錯介面；發布後的頁面不會有 */
+if (location.protocol === 'file:') window.__wbn = {
+  go, auto(v, speed) { AUTO = !!v; SPEED = speed || 1; }, stage: () => STAGE, save: () => SAVE,
+  frames: () => FRAMES,
+  noRender(v) { NO_RENDER = !!v; },
+  grab(q) { camera.updateMatrixWorld(); renderer.render(activeScene, camera); return renderer.domElement.toDataURL('image/jpeg', q || 0.82); },
+  debug: () => ({
+    W, camera, LOOK, TEMPLE, TRAIN, TREE, TREE_CAM, TREE_FWD, TREE_BASE, U_TREE, U_FAR, PATH, PATH_LEN, V3, NEAR, yawPitch,
+    setScene, resetWorld, setMood, setLook, travelerHead, placeTraveler, setTravelerPose, buildTrain, quiz, Q,
+    showHUD, hint, setMeter, setCounter, heartsReset, heartsCount, fillShard, gaugeSet, cancelRun, hooks, UPDATERS,
+    writeCard, reflectCard, friendCard, wishCard
+  })
+};
+
+})();
+</script>
+
+</body></html>
